@@ -183,26 +183,7 @@
 </footer>
 
 <script>
-// ════════════════════════════════════════════════════════
-//  ✏️  YOUR POSTS — HOW TO ADD A NEW POST
-//
-//  1. Open the Blog Writing Studio (studio.html in this folder)
-//  2. Write or generate your post using AI Assist
-//  3. Click "Copy post object for index.html"
-//  4. Paste the copied object into the POSTS array below
-//     (add a comma after the previous post's closing brace)
-//  5. Save this file — the blog updates automatically.
-//
-//  Post object fields:
-//    slug     → URL-friendly ID (e.g. "my-post-title")
-//    title    → Full post title shown on card and post page
-//    category → Label shown on the card badge
-//    date     → e.g. "May 2026"
-//    readTime → e.g. "5 min read"
-//    excerpt  → Short description shown on the listing card
-//    subtitle → One-liner shown below the title inside the post
-//    body     → Full post HTML (use <h2>, <p>, <pre><code>, etc.)
-// ════════════════════════════════════════════════════════
+
 const POSTS = [
   {
     slug:     "why-i-switched-to-dotnet-8",
@@ -275,17 +256,17 @@ public class OrderService(IOrderRepository repo, ILogger&lt;OrderService&gt; log
   },
   {
     slug:     "redis-caching-strategies",
-    title:    "Redis Caching Strategies That Cut Our API Response Time by 60%",
+    title:    "Redis Caching Strategies That Cut Our API Response Time by around 65%",
     category: "Azure",
-    date:     "April 2026",
+    date:     "May 2026",
     readTime: "7 min read",
     excerpt:  "Real-world patterns for using Redis in .NET microservices — from cache-aside to pub/sub, with code examples from production systems.",
     subtitle: "Practical patterns we use in production — not textbook theory.",
     body: `
-      <p>Caching is one of those topics where the gap between theory and practice is enormous. Every article explains cache-aside. Very few explain what happens when your cache goes stale across five services writing to the same data.</p>
+      <p>Caching is one of those topics where the gap between theory and practice is huge. Every article explains cache-aside but a very few explain what happens when your cache goes stale across five services writing to the same data.</p>
 
       <h2>Pattern 1: Cache-Aside with Stampede Protection</h2>
-      <p>Under high load, a cache miss on a popular key triggers dozens of simultaneous database hits — the "thundering herd" problem. We solved it with a distributed lock:</p>
+      <p>Under high load, a cache can miss on a popular key triggers dozens of simultaneous database hits — the "thundering herd" problem. We solved it with a distributed lock:</p>
 
       <pre><code class="language-csharp">public async Task&lt;Product&gt; GetProductAsync(int id)
 {
@@ -318,7 +299,7 @@ public class OrderService(IOrderRepository repo, ILogger&lt;OrderService&gt; log
 }</code></pre>
 
       <h2>Pattern 2: Write-Through for Critical Data</h2>
-      <p>For user sessions and shopping carts — anything where a stale read causes a visible bug — write to cache and database simultaneously:</p>
+      <p>For user sessions and shopping carts — anything where a stale read(outdated or old data) causes a visible bug — write to cache and database simultaneously:</p>
 
       <pre><code class="language-csharp">public async Task UpdateCartAsync(CartUpdateDto dto)
 {
@@ -336,16 +317,16 @@ public class OrderService(IOrderRepository repo, ILogger&lt;OrderService&gt; log
 
       <div class="callout callout-info">
         <span class="callout-icon">ℹ️</span>
-        <span>Write-through increases write latency slightly. Use it only for data where read consistency matters.</span>
+        <span>Write-through increases write latency slightly. Use it only for data where read consistency really matters.</span>
       </div>
 
       <h2>Pattern 3: Pub/Sub Cache Invalidation</h2>
-      <p>When multiple service instances hold the same cached data, use Redis pub/sub to broadcast invalidations across all nodes:</p>
+      <p>When multiple service instances hold the same cached data, use Redis pub/sub to broadcast invalidations across all the nodes:</p>
 
       <pre><code class="language-csharp">// Publisher — called when a product is updated
 await _subscriber.PublishAsync("cache:invalidate", $"product:{productId}");
 
-// Subscriber — registered at startup in each instance
+//Subscriber — registered at startup in each instance
 _subscriber.Subscribe("cache:invalidate", async (channel, key) =>
 {
     await _cache.RemoveAsync(key);
@@ -353,29 +334,19 @@ _subscriber.Subscribe("cache:invalidate", async (channel, key) =>
 });</code></pre>
 
       <h2>The Results</h2>
-      <p>Combining these three patterns reduced average response time from <strong>340ms to 136ms</strong> — a 60% improvement — and cut database load by roughly 70% during peak traffic.</p>
+      <p>By Combining these three patterns reduced average response time from around <strong>340ms to 138ms</strong> — around 65% improvement — and cut database load by roughly around 70% during peak traffic.</p>
 
       <div class="callout callout-tip">
         <span class="callout-icon">💡</span>
-        <span>Always instrument cache hit/miss rates. Without visibility, you're flying blind when something breaks.</span>
+        <span> Always instrument cache hit rates. Without visibility, you are flying blind when something breaks.</span>
       </div>
 
       <hr>
-      <p>Redis is deceptively simple to add and genuinely hard to operate well. Start with cache-aside, measure your hit rate, and only add complexity when the data justifies it.</p>
+      <p>Redis is deceptively simple to add and genuinely very hard to operate well. Start with cache-aside, measure your hit/miss rate, and only add complexity when the data justifies it.</p>
     `
   }
 
-  // ── PASTE NEW POSTS HERE (generated by studio.html) ──
-  // {
-  //   slug:     "my-new-post",
-  //   title:    "Post Title",
-  //   category: "Azure",
-  //   date:     "June 2026",
-  //   readTime: "4 min read",
-  //   excerpt:  "Short card description.",
-  //   subtitle: "Longer header subtitle shown inside the post.",
-  //   body: `<p>Your post HTML here...</p>`
-  // },
+ 
 ];
 
 // ─── ENGINE ─────────────────────────────────────────────
