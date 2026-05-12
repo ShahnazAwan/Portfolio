@@ -58,7 +58,7 @@
       justify-content: space-between;
     }
     .nav-brand {
-      font-family: "Raleway", sans-serif;
+      font-family: 'Syne', sans-serif;
       font-weight: 800;
       font-size: 1.2rem;
       color: var(--primary-dark);
@@ -104,7 +104,7 @@
       transform: translateY(-1px);
     }
 
-    /* ─── HERO HEADER ─── */
+    /* ─── HERO ─── */
     .blog-hero {
       padding: calc(var(--nav-height) + 4rem) 2.5rem 4rem;
       background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 40%, #f8fafc 100%);
@@ -139,7 +139,7 @@
       margin-bottom: 0.75rem;
     }
     .blog-hero h1 {
-      font-family: "Raleway", sans-serif;
+      font-family: 'Syne', sans-serif;
       font-size: clamp(2.2rem, 4vw, 3.5rem);
       font-weight: 800;
       letter-spacing: -0.03em;
@@ -154,7 +154,22 @@
       max-width: 540px;
     }
 
-    /* ─── BLOG GRID ─── */
+    /* ─── POST COUNT BADGE ─── */
+    .post-count {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 1.25rem;
+      font-size: 0.82rem;
+      color: var(--text3);
+      font-weight: 400;
+    }
+    .post-count strong {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* ─── BLOG SECTION ─── */
     .blog-section {
       padding: 4rem 2.5rem 6rem;
     }
@@ -174,15 +189,18 @@
       border: 1px solid var(--border);
       border-radius: 20px;
       overflow: hidden;
+      box-shadow: var(--card-shadow);
       transition: transform 0.3s, box-shadow 0.3s;
       opacity: 0;
       transform: translateY(24px);
       display: flex;
       flex-direction: column;
+      cursor: pointer;
     }
     .blog-card.visible {
       opacity: 1;
       transform: translateY(0);
+      transition: opacity 0.55s ease, transform 0.55s ease, box-shadow 0.3s, transform 0.3s;
     }
     .blog-card:hover {
       transform: translateY(-8px);
@@ -226,7 +244,7 @@
       color: var(--text3);
     }
     .blog-card-title {
-      font-family: "Raleway", sans-serif;
+      font-family: 'Syne', sans-serif;
       font-size: 1.15rem;
       font-weight: 700;
       color: var(--text);
@@ -261,10 +279,11 @@
       text-align: center;
       padding: 5rem 2rem;
       color: var(--text3);
+      grid-column: 1 / -1;
     }
     .blog-empty-icon { font-size: 3rem; margin-bottom: 1rem; }
     .blog-empty h3 {
-      font-family: "Raleway", sans-serif;
+      font-family: 'Syne', sans-serif;
       font-size: 1.4rem;
       color: var(--text2);
       margin-bottom: 0.5rem;
@@ -280,7 +299,7 @@
     }
     footer span { color: var(--primary); }
 
-    /* ─── SCROLL ANIMATION ─── */
+    /* ─── FADE IN ─── */
     .fade-in {
       opacity: 0;
       transform: translateY(20px);
@@ -314,53 +333,21 @@
   </div>
 </nav>
 
-<!-- HERO HEADER -->
+<!-- HERO -->
 <div class="blog-hero">
   <div class="blog-hero-inner fade-in">
     <div class="section-label">Writing & Insights</div>
     <h1>My <span>Blog</span></h1>
     <p>Thoughts on .NET architecture, Azure, performance optimization, and lessons learned building enterprise software.</p>
+    <div class="post-count"><strong id="post-count-num">0</strong> posts published</div>
   </div>
 </div>
 
-<!-- BLOG LISTING -->
+<!-- BLOG LISTING — rendered by posts.js -->
 <section class="blog-section">
   <div class="blog-inner">
-    <div class="blog-grid">
-
-      <!-- ✅ BLOG CARD 1 — Sample post -->
-      <article class="blog-card">
-        <div class="blog-card-top"></div>
-        <div class="blog-card-body">
-          <div class="blog-meta">
-            <span class="blog-category">.NET</span>
-            <span class="blog-date">May 2026</span>
-            <span class="blog-read-time">· 5 min read</span>
-          </div>
-          <h2 class="blog-card-title">Why I Switched from .NET 6 to .NET 8 and Never Looked Back</h2>
-          <p class="blog-card-excerpt">A practical walkthrough of the performance gains, new APIs, and developer experience improvements that made .NET 8 a game-changer for our enterprise projects.</p>
-          <a href="why-i-switched-to-dotnet-8.html" class="blog-card-link">Read post →</a>
-        </div>
-      </article>
-
-      <!-- ✅ BLOG CARD 2 — Sample post -->
-      <article class="blog-card">
-        <div class="blog-card-top"></div>
-        <div class="blog-card-body">
-          <div class="blog-meta">
-            <span class="blog-category">Azure</span>
-            <span class="blog-date">April 2026</span>
-            <span class="blog-read-time">· 7 min read</span>
-          </div>
-          <h2 class="blog-card-title">Redis Caching Strategies That Cut Our API Response Time by 60%</h2>
-          <p class="blog-card-excerpt">Real-world patterns for using Redis in .NET microservices — from cache-aside to pub/sub, with code examples from production systems.</p>
-          <a href="redis-caching-strategies.html" class="blog-card-link">Read post →</a>
-        </div>
-      </article>
-
-      <!-- ✅ ADD MORE BLOG CARDS HERE — duplicate the block above -->
-      <!-- Copy the <article class="blog-card">...</article> block and update the content -->
-
+    <div class="blog-grid" id="blog-grid">
+      <!-- cards injected by JS -->
     </div>
   </div>
 </section>
@@ -370,19 +357,77 @@
 </footer>
 
 <script>
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
-    });
-  }, { threshold: 0.1 });
+  // ─────────────────────────────────────────────
+  //  ADD / EDIT POSTS HERE
+  // ─────────────────────────────────────────────
+  const POSTS = [
+    {
+      slug:     "why-i-switched-to-dotnet-8",
+      title:    "Why I Switched from .NET 6 to .NET 8 and Never Looked Back",
+      category: ".NET",
+      date:     "May 2026",
+      readTime: "5 min read",
+      excerpt:  "A practical walkthrough of the performance gains, new APIs, and developer experience improvements that made .NET 8 a game-changer for our enterprise projects."
+    },
+    {
+      slug:     "redis-caching-strategies",
+      title:    "Redis Caching Strategies That Cut Our API Response Time by 60%",
+      category: "Azure",
+      date:     "April 2026",
+      readTime: "7 min read",
+      excerpt:  "Real-world patterns for using Redis in .NET microservices — from cache-aside to pub/sub, with code examples from production systems."
+    }
+    // Add more posts here ↑
+  ];
+</script>
 
-  document.querySelectorAll('.fade-in, .blog-card').forEach((el, i) => {
-    el.dataset.delay = (i % 3) * 100;
-    el.style.transitionDelay = `${(i % 3) * 0.08}s`;
-    observer.observe(el);
-  });
+<script>
+  const grid = document.getElementById('blog-grid');
+  const countEl = document.getElementById('post-count-num');
+
+  function renderPosts() {
+    countEl.textContent = POSTS.length;
+
+    if (!POSTS.length) {
+      grid.innerHTML = `
+        <div class="blog-empty">
+          <div class="blog-empty-icon">✍️</div>
+          <h3>No posts yet</h3>
+          <p>Check back soon — something is brewing.</p>
+        </div>`;
+      return;
+    }
+
+    grid.innerHTML = POSTS.map(post => `
+      <article class="blog-card" onclick="location.href='${post.slug}.html'">
+        <div class="blog-card-top"></div>
+        <div class="blog-card-body">
+          <div class="blog-meta">
+            <span class="blog-category">${post.category}</span>
+            <span class="blog-date">${post.date}</span>
+            <span class="blog-read-time">· ${post.readTime}</span>
+          </div>
+          <h2 class="blog-card-title">${post.title}</h2>
+          <p class="blog-card-excerpt">${post.excerpt}</p>
+          <a href="${post.slug}.html" class="blog-card-link">Read post →</a>
+        </div>
+      </article>
+    `).join('');
+
+    // Scroll animation
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.fade-in, .blog-card').forEach((el, i) => {
+      el.style.transitionDelay = `${(i % 3) * 0.08}s`;
+      observer.observe(el);
+    });
+  }
+
+  renderPosts();
 </script>
 </body>
 </html>
