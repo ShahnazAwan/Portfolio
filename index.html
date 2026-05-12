@@ -94,6 +94,21 @@
     }
     .nav-links a:hover { color: var(--primary); }
     .nav-links a:hover::after { width: 100%; }
+    /* Blog link gets a special pill style */
+    .nav-links .nav-blog a {
+      background: var(--primary);
+      color: #fff;
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .nav-links .nav-blog a::after { display: none; }
+    .nav-links .nav-blog a:hover {
+      background: var(--primary-dark);
+      color: #fff;
+      transform: translateY(-1px);
+    }
 
     /* ─── HERO ─── */
     .hero {
@@ -687,6 +702,8 @@
       <li><a href="#experience">Experience</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#contact">Contact</a></li>
+      <!-- ✅ NEW: Blog link -->
+      <li class="nav-blog"><a href="blog/">Blog</a></li>
     </ul>
   </div>
 </nav>
@@ -895,14 +912,14 @@
             <div class="contact-icon">📞</div>
             <div>
               <div class="contact-label">Phone</div>
-              <div class="contact-value">+92 320 8416384</div>
+              <div class="contact-value">+44 7555860456</div>
             </div>
           </a>
           <div class="contact-item">
             <div class="contact-icon">📍</div>
             <div>
               <div class="contact-label">Location</div>
-              <div class="contact-value">Lahore, Pakistan</div>
+              <div class="contact-value">Leeds, UK</div>
             </div>
           </div>
         </div>
