@@ -44,6 +44,9 @@
     .btn-outline:disabled { opacity: 0.4; cursor: not-allowed; }
     .btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border); }
     .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-pdf { background: #0f172a; color: #e2e8f0; border: none; }
+    .btn-pdf:hover { background: #1e293b; }
+    .btn-pdf:disabled { opacity: 0.35; cursor: not-allowed; }
 
     /* ── MAIN LAYOUT ── */
     .studio { display: flex; flex: 1; overflow: hidden; }
@@ -121,6 +124,7 @@
     <span class="status-chip" id="status-chip">ready</span>
     <button class="btn btn-outline" id="copy-obj-btn" onclick="copyPostObject()" disabled>Copy post object</button>
     <button class="btn btn-ghost" id="copy-code-topbtn" onclick="copyGeneratedCode()" style="display:none">Copy HTML</button>
+    <button class="btn btn-pdf" id="pdf-btn" onclick="downloadPDF()" disabled>⬇ PDF</button>
     <a class="btn btn-ghost" href="index.html">← Back to Blog</a>
   </div>
 </header>
@@ -515,11 +519,129 @@ BODY:
     document.getElementById('code-filename').textContent = `${slug}.html (standalone) · paste body into index.html POSTS array to publish`;
     document.getElementById('preview-frame').srcdoc = generatedHTML;
     document.getElementById('copy-obj-btn').disabled = false;
+    document.getElementById('pdf-btn').disabled = false;
     setStatus('generated ✓', 'done');
     setTimeout(() => setStatus('ready', ''), 3000);
   }
 
-  // ── COPY POST OBJECT (for pasting into index.html) ────
+  // ── DOWNLOAD PDF ──────────────────────────────────────
+  function downloadPDF() {
+    if (!generatedHTML) return;
+
+    const title   = document.getElementById('post-title').value.trim()    || 'post';
+    const cat     = activeCategory;
+    const date    = document.getElementById('meta-date').value.trim();
+    const rtm     = document.getElementById('meta-readtime').value.trim();
+    const subtitle= document.getElementById('post-subtitle').value.trim();
+    const slug    = makeSlug(title);
+
+    // Build a clean print-only version — no navbar, no footer chrome
+    const body = document.getElementById('post-body').value.trim();
+    const content = body.includes('<')
+      ? body
+      : body.split(/\n\n+/).map(p => p.trim() ? `<p>${p.replace(/\n/g,' ')}</p>` : '').join('\n');
+
+    const printDoc = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>${title}</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --primary: #0ea5e9; --primary-light: #e0f2fe; --primary-dark: #0369a1;
+    --text: #0f172a; --text2: #475569; --text3: #94a3b8; --border: #e2e8f0;
+  }
+  html { font-size: 16px; }
+  body { font-family: 'DM Sans', sans-serif; color: var(--text); line-height: 1.7; background: #fff; padding: 3rem 4rem; max-width: 780px; margin: 0 auto; }
+
+  /* Post header */
+  .pdf-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--primary-light); }
+  .pdf-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  .pdf-cat { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--primary-dark); background: var(--primary-light); padding: 3px 10px; border-radius: 100px; }
+  .pdf-date, .pdf-rt { font-size: 0.78rem; color: var(--text3); }
+  .pdf-title { font-family: 'Syne', sans-serif; font-size: 2.2rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 0.75rem; color: var(--text); }
+  .pdf-subtitle { font-size: 1.05rem; color: var(--text2); font-weight: 300; line-height: 1.6; }
+  .pdf-byline { margin-top: 1rem; font-size: 0.8rem; color: var(--text3); }
+  .pdf-byline strong { color: var(--primary-dark); font-weight: 600; }
+
+  /* Content typography */
+  h2 { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 700; color: var(--text); margin: 2.25rem 0 0.9rem; letter-spacing: -0.02em; }
+  h3 { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 600; color: var(--text); margin: 1.75rem 0 0.65rem; }
+  p { font-size: 0.97rem; color: var(--text2); font-weight: 300; margin-bottom: 1.3rem; line-height: 1.85; }
+  strong { color: var(--text); font-weight: 500; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1.3rem; color: var(--text2); font-weight: 300; }
+  li { margin-bottom: 0.35rem; line-height: 1.75; font-size: 0.97rem; }
+  blockquote { border-left: 3px solid var(--primary); background: var(--primary-light); padding: 0.9rem 1.25rem; border-radius: 0 8px 8px 0; margin: 1.5rem 0; font-style: italic; color: var(--primary-dark); font-size: 0.95rem; }
+  code { font-family: 'Fira Code', 'Cascadia Code', monospace; font-size: 0.84em; background: var(--primary-light); color: var(--primary-dark); padding: 2px 5px; border-radius: 4px; }
+  pre { background: #0f172a; border-radius: 10px; padding: 1.25rem; margin: 1.5rem 0; overflow-x: auto; border: 1px solid #1e293b; page-break-inside: avoid; }
+  pre code { background: transparent; color: #e2e8f0; font-size: 0.83rem; padding: 0; border-radius: 0; line-height: 1.65; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+  /* Callouts */
+  .callout { display: flex; gap: 0.65rem; padding: 0.9rem 1.1rem; border-radius: 10px; margin: 1.5rem 0; font-size: 0.9rem; page-break-inside: avoid; }
+  .callout-info  { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+  .callout-warn  { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+  .callout-tip   { background: #f0fdf4; border: 1px solid #bbf7d0; color: #14532d; }
+  .callout-icon  { font-size: 1rem; flex-shrink: 0; }
+
+  /* PDF footer */
+  .pdf-footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--text3); display: flex; justify-content: space-between; }
+  .pdf-footer strong { color: var(--primary); }
+
+  /* Print rules */
+  @media print {
+    body { padding: 0; }
+    pre { page-break-inside: avoid; }
+    h2, h3 { page-break-after: avoid; }
+    .callout { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="pdf-header">
+  <div class="pdf-meta">
+    <span class="pdf-cat">${cat}</span>
+    <span class="pdf-date">${date}</span>
+    <span class="pdf-rt">· ${rtm}</span>
+  </div>
+  <div class="pdf-title">${title}</div>
+  ${subtitle ? `<div class="pdf-subtitle">${subtitle}</div>` : ''}
+  <div class="pdf-byline">By <strong>Shahnaz Kulsoom</strong> · Senior Full Stack .NET Developer</div>
+</div>
+
+${content}
+
+<div class="pdf-footer">
+  <span>shahnaz-kulsoom.dev/blog</span>
+  <span>© 2026 <strong>Shahnaz Kulsoom</strong></span>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"><\/script>
+<script>
+  hljs.highlightAll();
+  // Auto-trigger print dialog after fonts & highlight load
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      window.print();
+    }, 600);
+  });
+<\/script>
+</body>
+</html>`;
+
+    const blob = new Blob([printDoc], { type: 'text/html' });
+    const url  = URL.createObjectURL(blob);
+    const win  = window.open(url, '_blank', 'width=900,height=700');
+    // Fallback: if popup blocked, open in same tab
+    if (!win) { window.location.href = url; }
+
+    // Show hint
+    toast('Print dialog will open — choose "Save as PDF" as the destination');
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+  }
   function copyPostObject() {
     if (!postObjectStr) return;
     navigator.clipboard.writeText(postObjectStr).then(() => {
