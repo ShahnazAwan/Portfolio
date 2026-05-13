@@ -6,6 +6,508 @@
 
   <!-- SEO & Social -->
   <title>Blog | Shahnaz Kulsoom</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+  <style>
+/* ═══════════════════════════════════════════════════
+   base.css — Reset · Variables · Typography
+   Shahnaz Kulsoom Blog
+   ═══════════════════════════════════════════════════ */
+
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+
+/* ── DESIGN TOKENS ── */
+:root {
+  /* Brand */
+  --primary:        #0ea5e9;
+  --primary-light:  #e0f2fe;
+  --primary-dark:   #0369a1;
+  --accent:         #06b6d4;
+  --accent2:        #818cf8;
+
+  /* Surface */
+  --bg:             #f8fafc;
+  --bg-card:        #ffffff;
+  --bg-dark:        #0f172a;
+  --bg-dark-raised: #1e293b;
+
+  /* Text */
+  --text:           #0f172a;
+  --text-muted:     #475569;
+  --text-subtle:    #94a3b8;
+
+  /* Border */
+  --border:         #e2e8f0;
+  --border-dark:    #1e293b;
+
+  /* Semantic */
+  --success-bg:     #f0fdf4;
+  --success-border: #bbf7d0;
+  --success-text:   #14532d;
+  --warn-bg:        #fffbeb;
+  --warn-border:    #fde68a;
+  --warn-text:      #92400e;
+  --info-bg:        #eff6ff;
+  --info-border:    #bfdbfe;
+  --info-text:      #1e40af;
+
+  /* Elevation */
+  --shadow-card:    0 4px 24px rgba(14,165,233,0.07), 0 1px 4px rgba(0,0,0,0.04);
+  --shadow-hover:   0 12px 40px rgba(14,165,233,0.15), 0 2px 8px rgba(0,0,0,0.06);
+
+  /* Layout */
+  --nav-height:     68px;
+  --content-width:  720px;
+  --max-width:      1100px;
+
+  /* Radius */
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  18px;
+  --radius-pill:100px;
+
+  /* Transition */
+  --transition: 0.2s ease;
+}
+
+/* ── BODY ── */
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── TYPOGRAPHY SCALE ── */
+h1, h2, h3, h4 {
+  font-family: 'Raleway', sans-serif;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--text);
+}
+
+/* ── UTILITIES ── */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 2.5rem;
+}
+.container--narrow {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 2.5rem;
+}
+
+@media (max-width: 768px) {
+  .container, .container--narrow { padding: 0 1.25rem; }
+}
+
+/* ═══════════════════════════════════════════════════
+   layout.css — Navbar · Hero · Footer · Grid
+   Depends on: base.css
+   ═══════════════════════════════════════════════════ */
+
+/* ── READING PROGRESS BAR ── */
+#read-progress {
+  position: fixed; top: var(--nav-height); left: 0;
+  height: 3px; width: 0%;
+  background: linear-gradient(90deg, var(--primary), var(--accent2));
+  z-index: 200; transition: width 0.1s linear;
+  pointer-events: none;
+}
+
+/* ── NAVBAR ── */
+.navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--nav-height);
+  display: flex; align-items: center; padding: 0 2.5rem;
+  background: rgba(248,250,252,0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 4px 24px rgba(14,165,233,0.05);
+}
+.navbar__inner {
+  max-width: var(--max-width); width: 100%; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.navbar__brand {
+  font-family: 'Raleway', sans-serif; font-weight: 800;
+  font-size: 1.15rem; color: var(--primary-dark);
+  text-decoration: none; letter-spacing: -0.02em;
+}
+.navbar__links { display: flex; gap: 2rem; list-style: none; }
+.navbar__links a {
+  font-size: 0.875rem; font-weight: 500; color: var(--text-muted);
+  text-decoration: none; position: relative; transition: color var(--transition);
+}
+.navbar__links a::after {
+  content: ''; position: absolute; bottom: -3px; left: 0;
+  width: 0; height: 2px; background: var(--primary);
+  border-radius: 2px; transition: width 0.3s;
+}
+.navbar__links a:hover { color: var(--primary); }
+.navbar__links a:hover::after { width: 100%; }
+.navbar__links .is-pill a {
+  background: var(--primary); color: #fff;
+  padding: 5px 15px; border-radius: var(--radius-pill);
+  font-size: 0.825rem;
+}
+.navbar__links .is-pill a::after { display: none; }
+.navbar__links .is-pill a:hover { background: var(--primary-dark); }
+
+/* ── HERO (listing) ── */
+.hero {
+  padding: calc(var(--nav-height) + 4rem) 2.5rem 3.5rem;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 45%, #f8fafc 100%);
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: -80px; right: -80px;
+  width: 340px; height: 340px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(14,165,233,0.07) 0%, transparent 70%);
+  animation: float 9s ease-in-out infinite;
+}
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-16px)} }
+.hero__inner { position: relative; z-index: 1; }
+.hero__label {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--primary); margin-bottom: 0.5rem;
+  display: block;
+}
+.hero__title {
+  font-size: clamp(1.9rem, 4vw, 3rem); font-weight: 800;
+  letter-spacing: -0.03em; margin-bottom: 0.85rem;
+}
+.hero__title span { color: var(--primary); }
+.hero__subtitle {
+  font-size: 1rem; color: var(--text-muted); font-weight: 300;
+  max-width: 480px; line-height: 1.7;
+}
+
+/* ── HERO (post) ── */
+.post-hero {
+  padding: calc(var(--nav-height) + 3.5rem) 2.5rem 3rem;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 45%, #f8fafc 100%);
+  position: relative; overflow: hidden;
+}
+.post-hero::before {
+  content: '';
+  position: absolute; top: -80px; right: -80px;
+  width: 300px; height: 300px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(14,165,233,0.07) 0%, transparent 70%);
+}
+.post-hero__inner { position: relative; z-index: 1; }
+.post-hero__meta {
+  display: flex; align-items: center; gap: 0.6rem;
+  margin-bottom: 1rem; flex-wrap: wrap;
+}
+.post-hero__title {
+  font-size: clamp(1.5rem, 3.5vw, 2.2rem); font-weight: 800;
+  letter-spacing: -0.03em; margin-bottom: 0.6rem; line-height: 1.2;
+}
+.post-hero__subtitle {
+  font-size: 0.975rem; color: var(--text-muted);
+  font-weight: 300; line-height: 1.65; max-width: 560px;
+}
+
+/* ── BLOG SECTION ── */
+.blog-section { padding: 3rem 2.5rem 6rem; }
+
+/* ── BLOG CONTROLS (search + filters) ── */
+.blog-controls {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.75rem; flex-wrap: wrap;
+}
+.blog-controls__search {
+  flex: 1; min-width: 180px; max-width: 300px;
+  padding: 8px 14px 8px 36px;
+  border: 1px solid var(--border); border-radius: var(--radius-pill);
+  font-size: 0.875rem; font-family: inherit;
+  background: var(--bg-card); color: var(--text); outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: 12px center;
+}
+.blog-controls__search:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(14,165,233,0.1);
+}
+.blog-controls__filters { display: flex; gap: 6px; flex-wrap: wrap; }
+.blog-controls__count { font-size: 0.78rem; color: var(--text-subtle); margin-left: auto; }
+
+/* ── BLOG GRID ── */
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.75rem;
+}
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  text-align: center; padding: 4rem 2rem;
+  color: var(--text-subtle);
+}
+.empty-state h3 {
+  font-size: 1.1rem; margin-bottom: 0.4rem; color: var(--text-muted);
+}
+.empty-state p { font-size: 0.875rem; }
+
+/* ── POST FOOTER ── */
+.post-footer {
+  padding: 1.75rem 0 4rem;
+  border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between;
+  align-items: center; flex-wrap: wrap; gap: 1rem;
+}
+.post-footer a, .post-footer button {
+  font-size: 0.875rem; font-weight: 600;
+  color: var(--primary-dark); text-decoration: none;
+  background: none; border: none; cursor: pointer;
+  font-family: inherit; transition: color var(--transition);
+}
+.post-footer a:hover, .post-footer button:hover { color: var(--primary); }
+
+/* ── SITE FOOTER ── */
+.site-footer {
+  text-align: center; padding: 2rem;
+  background: var(--text); color: var(--text-subtle);
+  font-size: 0.85rem;
+}
+.site-footer span { color: var(--primary); }
+
+/* ── BACK LINK ── */
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.85rem; font-weight: 500; color: var(--text-subtle);
+  text-decoration: none; margin-bottom: 1.25rem;
+  transition: color var(--transition), gap var(--transition);
+  background: none; border: none; cursor: pointer;
+  font-family: inherit; padding: 0;
+}
+.back-link:hover { color: var(--primary); gap: 10px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .navbar__links { display: none; }
+  .hero, .post-hero, .blog-section { padding-left: 1.25rem; padding-right: 1.25rem; }
+  .blog-grid { grid-template-columns: 1fr; }
+}
+
+/* ═══════════════════════════════════════════════════
+   components.css — Cards · Badges · Post Content
+                    Callouts · Code Blocks · Buttons
+   Depends on: base.css
+   ═══════════════════════════════════════════════════ */
+
+/* ── BADGE ── */
+.badge {
+  display: inline-block;
+  font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--primary-dark); background: var(--primary-light);
+  padding: 3px 10px; border-radius: var(--radius-pill);
+  border: 1px solid rgba(14,165,233,0.2);
+}
+
+/* ── FILTER TAG ── */
+.filter-tag {
+  font-size: 0.72rem; font-weight: 600;
+  padding: 4px 13px; border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: var(--bg-card); color: var(--text-muted);
+  cursor: pointer; transition: all 0.15s; letter-spacing: 0.04em;
+}
+.filter-tag:hover { border-color: var(--primary); color: var(--primary); }
+.filter-tag.is-active {
+  background: var(--primary); color: #fff; border-color: var(--primary);
+}
+
+/* ── BLOG CARD ── */
+.blog-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.25s, box-shadow 0.25s;
+  opacity: 0; transform: translateY(16px);
+  display: flex; flex-direction: column; cursor: pointer;
+}
+.blog-card.is-visible {
+  opacity: 1; transform: translateY(0);
+  transition: opacity 0.5s ease, transform 0.5s ease,
+              box-shadow 0.25s, border-color 0.25s;
+}
+.blog-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+.blog-card__stripe {
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--accent2));
+}
+.blog-card__body {
+  padding: 1.5rem 1.75rem; flex: 1;
+  display: flex; flex-direction: column;
+}
+.blog-card__meta {
+  display: flex; align-items: center; gap: 0.6rem;
+  margin-bottom: 0.85rem; flex-wrap: wrap;
+}
+.blog-card__date, .blog-card__rt { font-size: 0.78rem; color: var(--text-subtle); }
+.blog-card__title {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.08rem; font-weight: 700;
+  color: var(--text); margin-bottom: 0.6rem; line-height: 1.35;
+}
+.blog-card__excerpt {
+  font-size: 0.875rem; color: var(--text-muted);
+  font-weight: 300; line-height: 1.7;
+  flex: 1; margin-bottom: 1.25rem;
+}
+.blog-card__cta {
+  font-size: 0.85rem; font-weight: 600;
+  color: var(--primary-dark);
+  display: inline-flex; align-items: center; gap: 5px;
+  transition: gap var(--transition), color var(--transition);
+}
+.blog-card:hover .blog-card__cta { color: var(--primary); gap: 9px; }
+
+/* ── POST CONTENT ── */
+.post-content { padding: 3rem 0 5rem; }
+
+.post-content h2 {
+  font-size: 1.35rem; font-weight: 700;
+  color: var(--text); margin: 2.25rem 0 0.85rem;
+  letter-spacing: -0.02em;
+}
+.post-content h3 {
+  font-size: 1.1rem; font-weight: 600;
+  color: var(--text); margin: 1.75rem 0 0.65rem;
+}
+.post-content p {
+  font-size: 0.975rem; color: var(--text-muted);
+  font-weight: 300; margin-bottom: 1.35rem; line-height: 1.85;
+}
+.post-content strong { color: var(--text); font-weight: 500; }
+.post-content em { font-style: italic; }
+.post-content a {
+  color: var(--primary-dark); text-decoration: underline;
+  text-decoration-color: rgba(14,165,233,0.35);
+  text-underline-offset: 3px;
+  transition: color var(--transition);
+}
+.post-content a:hover { color: var(--primary); }
+.post-content ul, .post-content ol {
+  padding-left: 1.5rem; margin-bottom: 1.35rem;
+  color: var(--text-muted); font-weight: 300;
+}
+.post-content li { margin-bottom: 0.4rem; line-height: 1.75; font-size: 0.975rem; }
+.post-content hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+
+/* ── BLOCKQUOTE ── */
+.post-content blockquote {
+  border-left: 3px solid var(--primary);
+  background: var(--primary-light);
+  padding: 1rem 1.25rem; border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  margin: 1.5rem 0; font-style: italic; color: var(--primary-dark);
+}
+
+/* ── INLINE CODE ── */
+.post-content code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.85em;
+  background: var(--primary-light); color: var(--primary-dark);
+  padding: 2px 6px; border-radius: var(--radius-sm);
+}
+
+/* ── CODE BLOCK ── */
+.post-content pre {
+  background: var(--bg-dark); border-radius: var(--radius-md);
+  padding: 1.4rem 1.5rem; margin: 1.5rem 0;
+  overflow-x: auto; border: 1px solid var(--border-dark);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+}
+.post-content pre code {
+  background: transparent; color: #e2e8f0;
+  font-size: 0.86rem; padding: 0; border-radius: 0; line-height: 1.7;
+}
+
+/* ── CALLOUT ── */
+.callout {
+  display: flex; gap: 0.75rem; padding: 1rem 1.25rem;
+  border-radius: var(--radius-md); margin: 1.5rem 0; font-size: 0.92rem;
+}
+.callout__icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+.callout--tip   { background: var(--success-bg); border: 1px solid var(--success-border); color: var(--success-text); }
+.callout--warn  { background: var(--warn-bg);    border: 1px solid var(--warn-border);    color: var(--warn-text); }
+.callout--info  { background: var(--info-bg);    border: 1px solid var(--info-border);    color: var(--info-text); }
+
+/* ── INLINE CODE BLOCK (composer addon) ── */
+.pc-code-block {
+  margin: 1.25rem 0; border-radius: var(--radius-md); overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+}
+.pc-code-bar {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px; background: var(--bg-dark-raised);
+}
+.pc-code-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.pc-code-file {
+  margin-left: auto; font-size: 0.62rem;
+  font-family: 'JetBrains Mono', monospace; color: var(--text-subtle);
+}
+.pc-code-pre {
+  background: var(--bg-dark); margin: 0; padding: 1.1rem 1.25rem;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+  line-height: 1.7; color: #e2e8f0; white-space: pre-wrap; word-break: break-word;
+}
+
+/* ── COMPARE BLOCK (composer addon) ── */
+.pc-compare-block { margin: 1.25rem 0; }
+.pc-compare-label {
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text-subtle); margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.pc-compare-label::before, .pc-compare-label::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+.pc-compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pc-cmp-panel { border-radius: var(--radius-md); overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+.pc-cmp-bar { display: flex; align-items: center; gap: 8px; padding: 7px 12px; font-size: 0.7rem; font-weight: 700; }
+.pc-cmp-bar--good { background: #14532d; color: #86efac; }
+.pc-cmp-bar--bad  { background: #7f1d1d; color: #fca5a5; }
+.pc-cmp-pre {
+  background: var(--bg-dark); margin: 0; padding: 0.85rem 1rem;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
+  line-height: 1.65; color: #e2e8f0; white-space: pre-wrap; word-break: break-word;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 7px 16px; border-radius: var(--radius-md);
+  font-size: 0.8rem; font-weight: 600; cursor: pointer;
+  border: none; font-family: inherit; transition: all 0.18s; white-space: nowrap;
+}
+.btn--primary { background: var(--primary); color: #fff; }
+.btn--primary:hover { background: var(--primary-dark); }
+.btn--dark { background: var(--bg-dark); color: #e2e8f0; }
+.btn--dark:hover { background: var(--bg-dark-raised); }
+.btn--outline { background: transparent; color: var(--primary-dark); border: 1px solid var(--primary); }
+.btn--outline:hover { background: var(--primary-light); }
+.btn--ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+.btn--ghost:hover { border-color: var(--primary); color: var(--primary); }
+.btn--export { background: linear-gradient(135deg, var(--primary), var(--accent2)); color: #fff; }
+.btn--export:hover { opacity: 0.88; transform: translateY(-1px); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  </style>
   <meta name="description"          content="Technical writing on .NET, Azure, and full-stack development by Shahnaz Kulsoom.">
   <meta property="og:type"          content="website">
   <meta property="og:site_name"     content="Shahnaz Kulsoom">
@@ -20,13 +522,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <!-- Syntax highlighting -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
-
-  <!-- Styles — order matters: base → layout → components -->
-  <link rel="stylesheet" href="assets/css/base.css">
-  <link rel="stylesheet" href="assets/css/layout.css">
-  <link rel="stylesheet" href="assets/css/components.css">
-</head>
+  <!-- Styles — order matters: base → layout → components --></head>
 <body>
 
   <!-- Reading progress -->
@@ -128,11 +624,300 @@
     <p>© 2026 <span>Shahnaz Kulsoom</span> · Senior Full Stack .NET Developer</p>
   </footer>
 
-  <!-- Scripts — data first, then engine -->
-  <script src="data/posts.js"></script>
-  <script src="assets/js/post.js"></script>
-  <script src="assets/js/blog.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <!-- Scripts — data first, then engine -->  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>
+/* ═══════════════════════════════════════════════════
+   data/posts.js — Posts Metadata Index
+   Body content lives in posts/<slug>.js (loaded on demand)
+
+   HOW TO ADD A NEW POST:
+   1. Open composer.html → write → click "Export Post File"
+   2. Drop the downloaded <slug>.js into the posts/ folder
+   3. Add one metadata entry here — no body needed
+   4. Done. The listing updates automatically.
+   ═══════════════════════════════════════════════════ */
+
+const POSTS_INDEX = [
+  {
+    slug:     "why-i-switched-to-dotnet-8",
+    title:    "Why I Switched from .NET 6 to .NET 8 and Never Looked Back",
+    category: ".NET",
+    date:     "May 2026",
+    readTime: "5 min read",
+    excerpt:  "A practical walkthrough of the performance gains, new APIs, and developer experience improvements that made .NET 8 a game-changer for our enterprise projects.",
+    subtitle: "Real numbers, real projects — here's what actually changed when we migrated."
+  },
+  {
+    slug:     "redis-caching-strategies",
+    title:    "Redis Caching Strategies That Cut Our API Response Time by 60%",
+    category: "Azure",
+    date:     "April 2026",
+    readTime: "7 min read",
+    excerpt:  "Real-world patterns for using Redis in .NET microservices — from cache-aside to pub/sub, with code examples from production systems.",
+    subtitle: "Practical patterns we use in production — not textbook theory."
+  }
+  /* ← paste new entries here (generated by composer.html) */
+];
+
+
+/* ═══════════════════════════════════════════════════
+   post.js — On-Demand Post Content Loader
+   Loads posts/<slug>.js which sets window.POST_BODY
+   ═══════════════════════════════════════════════════ */
+
+'use strict';
+
+const Post = {
+
+  /* ── LOAD POST BODY ── */
+  load(slug) {
+    const contentEl = document.getElementById('p-content');
+    if (!contentEl) return;
+
+    contentEl.innerHTML = `
+      <div style="text-align:center;padding:4rem 2rem;color:var(--text-subtle);">
+        <p style="font-size:0.9rem;">Loading…</p>
+      </div>`;
+
+    /* remove previously loaded script tag */
+    const prev = document.getElementById('__post_script');
+    if (prev) prev.remove();
+    window.POST_BODY = null;
+
+    const script  = document.createElement('script');
+    script.id     = '__post_script';
+    script.src    = `posts/${slug}.js?v=${Date.now()}`;
+
+    script.onload = () => Post.render(contentEl);
+    script.onerror = () => {
+      contentEl.innerHTML = `
+        <div class="container--narrow" style="padding-top:2rem;">
+          <p style="color:var(--text-subtle);font-size:0.9rem;">
+            Could not load post. Make sure
+            <code style="background:var(--primary-light);color:var(--primary-dark);
+              padding:1px 5px;border-radius:4px;font-size:0.85em;">
+              posts/${slug}.js
+            </code>
+            exists in the posts/ folder.
+          </p>
+        </div>`;
+    };
+
+    document.body.appendChild(script);
+  },
+
+  /* ── RENDER ── */
+  render(contentEl) {
+    if (!window.POST_BODY) {
+      contentEl.innerHTML = '<p style="color:var(--text-subtle);padding:2rem;">Post body is empty.</p>';
+      return;
+    }
+    contentEl.innerHTML = window.POST_BODY;
+
+    /* syntax highlight */
+    if (window.hljs) {
+      contentEl.querySelectorAll('pre code').forEach(el => {
+        delete el.dataset.highlighted;
+        hljs.highlightElement(el);
+      });
+    }
+  },
+
+};
+
+
+/* ═══════════════════════════════════════════════════
+   blog.js — Blog Listing Engine
+   Reads: POSTS_INDEX from data/posts.js
+   ═══════════════════════════════════════════════════ */
+
+'use strict';
+
+/* ── STATE ── */
+const Blog = {
+  activeCategory: 'All',
+  searchQuery:    '',
+  currentSlug:    null,
+};
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded', () => {
+  Blog.buildFilters();
+  Blog.renderGrid();
+  Blog.handleDeepLink();
+  Blog.setupProgress();
+});
+
+/* ── FILTER TAGS ── */
+Blog.buildFilters = function() {
+  const categories = ['All', ...new Set(POSTS_INDEX.map(p => p.category))];
+  const wrap = document.getElementById('filter-tags');
+  if (!wrap) return;
+  wrap.innerHTML = categories.map(cat => `
+    <button class="filter-tag ${cat === 'All' ? 'is-active' : ''}"
+      data-cat="${cat}">${cat}</button>
+  `).join('');
+  wrap.addEventListener('click', e => {
+    const btn = e.target.closest('.filter-tag');
+    if (!btn) return;
+    wrap.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('is-active'));
+    btn.classList.add('is-active');
+    Blog.activeCategory = btn.dataset.cat;
+    Blog.renderGrid();
+  });
+};
+
+/* ── SEARCH ── */
+const searchInput = document.getElementById('search-input');
+if (searchInput) {
+  searchInput.addEventListener('input', () => {
+    Blog.searchQuery = searchInput.value.toLowerCase().trim();
+    Blog.renderGrid();
+  });
+}
+
+/* ── RENDER GRID ── */
+Blog.renderGrid = function() {
+  const filtered = POSTS_INDEX.filter(post => {
+    const matchCat = Blog.activeCategory === 'All' || post.category === Blog.activeCategory;
+    const q = Blog.searchQuery;
+    const matchSearch = !q ||
+      post.title.toLowerCase().includes(q) ||
+      post.excerpt.toLowerCase().includes(q) ||
+      post.category.toLowerCase().includes(q);
+    return matchCat && matchSearch;
+  });
+
+  const countEl = document.getElementById('post-count');
+  if (countEl) countEl.textContent = `${filtered.length} post${filtered.length !== 1 ? 's' : ''}`;
+
+  const grid    = document.getElementById('blog-grid');
+  const empty   = document.getElementById('empty-state');
+  if (!grid) return;
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '';
+    if (empty) empty.style.display = '';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+
+  grid.innerHTML = filtered.map((post, i) => `
+    <article class="blog-card" data-slug="${post.slug}"
+      style="transition-delay: ${(i % 3) * 0.07}s"
+      role="button" tabindex="0"
+      aria-label="Read: ${post.title}">
+      <div class="blog-card__stripe"></div>
+      <div class="blog-card__body">
+        <div class="blog-card__meta">
+          <span class="badge">${post.category}</span>
+          <span class="blog-card__date">${post.date}</span>
+          <span class="blog-card__rt">· ${post.readTime}</span>
+        </div>
+        <h2 class="blog-card__title">${post.title}</h2>
+        <p class="blog-card__excerpt">${post.excerpt}</p>
+        <span class="blog-card__cta">Read post →</span>
+      </div>
+    </article>
+  `).join('');
+
+  /* click handler */
+  grid.querySelectorAll('.blog-card').forEach(card => {
+    const open = () => Blog.showPost(card.dataset.slug);
+    card.addEventListener('click', open);
+    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') open(); });
+  });
+
+  /* animate in */
+  requestAnimationFrame(() => {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('is-visible'); });
+    }, { threshold: 0.06 });
+    grid.querySelectorAll('.blog-card').forEach(el => observer.observe(el));
+  });
+};
+
+/* ── SHOW POST ── */
+Blog.showPost = function(slug) {
+  const meta = POSTS_INDEX.find(p => p.slug === slug);
+  if (!meta) return;
+
+  history.pushState({ slug }, '', `?post=${slug}`);
+  Blog.currentSlug = slug;
+
+  /* populate hero */
+  document.getElementById('p-category').textContent = meta.category;
+  document.getElementById('p-date').textContent      = meta.date;
+  document.getElementById('p-readtime').textContent  = '· ' + meta.readTime;
+  document.getElementById('p-title').textContent     = meta.title;
+  document.getElementById('p-subtitle').textContent  = meta.subtitle || meta.excerpt;
+
+  /* meta tags */
+  Blog.updateMeta(meta.title + ' | Shahnaz Kulsoom', meta.excerpt);
+
+  /* swap views */
+  document.getElementById('view-listing').style.display = 'none';
+  document.getElementById('view-post').style.display    = 'block';
+  const prog = document.getElementById('read-progress');
+  if (prog) prog.style.width = '0%';
+  window.scrollTo({ top: 0 });
+
+  Post.load(slug);
+};
+
+/* ── SHOW LISTING ── */
+Blog.showListing = function() {
+  history.pushState({}, '', window.location.pathname);
+  Blog.currentSlug = null;
+  document.getElementById('view-listing').style.display = 'block';
+  document.getElementById('view-post').style.display    = 'none';
+  const prog = document.getElementById('read-progress');
+  if (prog) prog.style.width = '0%';
+  Blog.updateMeta('Blog | Shahnaz Kulsoom', 'Technical writing on .NET, Azure, and full-stack development.');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+/* expose for onclick in HTML */
+window.showListing = () => Blog.showListing();
+
+/* ── DEEP LINK ── */
+Blog.handleDeepLink = function() {
+  const slug = new URLSearchParams(window.location.search).get('post');
+  if (slug) Blog.showPost(slug);
+};
+
+/* ── BROWSER BACK/FORWARD ── */
+window.addEventListener('popstate', e => {
+  e.state?.slug ? Blog.showPost(e.state.slug) : Blog.showListing();
+});
+
+/* ── META TAGS ── */
+Blog.updateMeta = function(title, description) {
+  document.title = title;
+  const set = (sel, val) => {
+    let el = document.querySelector(sel);
+    if (!el) { el = document.createElement('meta'); document.head.appendChild(el); }
+    el.setAttribute('content', val);
+  };
+  set('meta[name="description"]',       description);
+  set('meta[property="og:title"]',      title);
+  set('meta[property="og:description"]', description);
+  set('meta[property="og:url"]',        window.location.href);
+  set('meta[name="twitter:title"]',     title);
+  set('meta[name="twitter:description"]', description);
+};
+
+/* ── SCROLL PROGRESS ── */
+Blog.setupProgress = function() {
+  document.addEventListener('scroll', () => {
+    if (!Blog.currentSlug) return;
+    const prog = document.getElementById('read-progress');
+    if (!prog) return;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    if (max > 0) prog.style.width = (window.scrollY / max * 100).toFixed(1) + '%';
+  });
+};
+
+  </script>
 
 </body>
 </html>

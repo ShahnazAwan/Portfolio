@@ -4,706 +4,357 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shahnaz Kulsoom | Senior .NET Developer</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ═══════════════════════════════════════════════════
+   main.css — Portfolio Styles
+   Shahnaz Kulsoom · shahnaz-kulsoom.dev
+   ═══════════════════════════════════════════════════ */
 
-    :root {
-      --primary: #0ea5e9;
-      --primary-light: #e0f2fe;
-      --primary-dark: #0369a1;
-      --accent: #06b6d4;
-      --accent2: #818cf8;
-      --bg: #f8fafc;
-      --bg2: #ffffff;
-      --bg3: #f0f9ff;
-      --text: #0f172a;
-      --text2: #475569;
-      --text3: #94a3b8;
-      --border: #e2e8f0;
-      --card-shadow: 0 4px 24px rgba(14,165,233,0.08), 0 1px 4px rgba(0,0,0,0.04);
-      --card-shadow-hover: 0 12px 40px rgba(14,165,233,0.18), 0 2px 8px rgba(0,0,0,0.08);
-      --nav-height: 68px;
-    }
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
 
-    html { scroll-behavior: smooth; font-size: 16px; }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.7;
-      overflow-x: hidden;
-    }
-
-    /* ─── NAVBAR ─── */
-    .navbar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      height: var(--nav-height);
-      display: flex;
-      align-items: center;
-      padding: 0 2.5rem;
-      background: rgba(248,250,252,0.85);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-      transition: box-shadow 0.3s;
-    }
-    .navbar.scrolled {
-      box-shadow: 0 4px 24px rgba(14,165,233,0.08);
-    }
-    .nav-inner {
-      max-width: 1100px;
-      width: 100%;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .nav-brand {
-      font-family:"Raleway",  sans-serif;
-      font-weight: 800;
-      font-size: 1.2rem;
-      color: var(--primary-dark);
-      text-decoration: none;
-      letter-spacing: -0.02em;
-    }
-    .nav-links {
-      display: flex;
-      gap: 2rem;
-      list-style: none;
-    }
-    .nav-links a {
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: var(--text2);
-      text-decoration: none;
-      position: relative;
-      transition: color 0.2s;
-    }
-    .nav-links a::after {
-      content: '';
-      position: absolute;
-      bottom: -3px; left: 0;
-      width: 0; height: 2px;
-      background: var(--primary);
-      border-radius: 2px;
-      transition: width 0.3s;
-    }
-    .nav-links a:hover { color: var(--primary); }
-    .nav-links a:hover::after { width: 100%; }
-    /* Blog link gets a special pill style */
-    .nav-links .nav-blog a {
-      background: var(--primary);
-      color: #fff;
-      padding: 6px 16px;
-      border-radius: 100px;
-      font-size: 0.85rem;
-      transition: background 0.2s, transform 0.2s;
-    }
-    .nav-links .nav-blog a::after { display: none; }
-    .nav-links .nav-blog a:hover {
-      background: var(--primary-dark);
-      color: #fff;
-      transform: translateY(-1px);
-    }
-
-    /* ─── HERO ─── */
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      padding: calc(var(--nav-height) + 4rem) 2.5rem 5rem;
-      position: relative;
-      overflow: hidden;
-      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 40%, #f8fafc 100%);
-    }
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: -200px; right: -200px;
-      width: 600px; height: 600px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(14,165,233,0.12) 0%, transparent 70%);
-      animation: float 8s ease-in-out infinite;
-    }
-    .hero::after {
-      content: '';
-      position: absolute;
-      bottom: -150px; left: -150px;
-      width: 500px; height: 500px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(129,140,248,0.10) 0%, transparent 70%);
-      animation: float 10s ease-in-out infinite reverse;
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0) scale(1); }
-      50% { transform: translateY(-30px) scale(1.05); }
-    }
-    .hero-inner {
-      max-width: 1100px;
-      width: 100%;
-      margin: 0 auto;
-      position: relative;
-      z-index: 1;
-    }
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 100px;
-      padding: 6px 16px;
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: var(--primary-dark);
-      margin-bottom: 2rem;
-      box-shadow: 0 2px 8px rgba(14,165,233,0.1);
-      opacity: 0;
-      animation: slideUp 0.6s 0.1s forwards;
-    }
-    .hero-badge .dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--primary);
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.6; transform: scale(1.3); }
-    }
-    .hero h1 {
-         font-family:"Raleway",  sans-serif;
-      font-size: clamp(2.8rem, 6vw, 5.5rem);
-      font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -0.03em;
-      color: var(--text);
-      margin-bottom: 0.5rem;
-      opacity: 0;
-      animation: slideUp 0.7s 0.2s forwards;
-    }
-    .hero h1 .highlight {
-      color: var(--primary);
-      position: relative;
-    }
-    .hero h1 .highlight::after {
-      content: '';
-      position: absolute;
-      bottom: 2px; left: 0; right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--primary), var(--accent));
-      border-radius: 2px;
-      opacity: 0.3;
-    }
-    .hero-sub {
-      font-family:"Raleway",  sans-serif;
-      font-size: clamp(1.1rem, 2.5vw, 1.6rem);
-      font-weight: 600;
-      color: var(--text2);
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      animation: slideUp 0.7s 0.3s forwards;
-    }
-    .hero-desc {
-      max-width: 560px;
-      font-size: 1.05rem;
-      color: var(--text2);
-      font-weight: 300;
-      margin-bottom: 2.5rem;
-      opacity: 0;
-      animation: slideUp 0.7s 0.4s forwards;
-    }
-    .hero-ctas {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      opacity: 0;
-      animation: slideUp 0.7s 0.5s forwards;
-    }
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--primary);
-      color: #fff;
-      font-weight: 500;
-      font-size: 0.95rem;
-      padding: 12px 28px;
-      border-radius: 100px;
-      text-decoration: none;
-      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 4px 16px rgba(14,165,233,0.35);
-    }
-    .btn-primary:hover {
-      background: var(--primary-dark);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(14,165,233,0.45);
-    }
-    .btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: transparent;
-      color: var(--primary-dark);
-      font-weight: 500;
-      font-size: 0.95rem;
-      padding: 12px 28px;
-      border-radius: 100px;
-      text-decoration: none;
-      border: 1.5px solid var(--primary);
-      transition: background 0.2s, transform 0.2s;
-    }
-    .btn-secondary:hover {
-      background: var(--primary-light);
-      transform: translateY(-2px);
-    }
-    .hero-stats {
-      display: flex;
-      gap: 3rem;
-      margin-top: 4rem;
-      padding-top: 3rem;
-      border-top: 1px solid var(--border);
-      opacity: 0;
-      animation: slideUp 0.7s 0.65s forwards;
-    }
-    .stat-item { text-align: left; }
-    .stat-num {
-      font-family:"Raleway",  sans-serif;
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--primary-dark);
-      line-height: 1;
-    }
-    .stat-label {
-      font-size: 0.82rem;
-      color: var(--text3);
-      font-weight: 400;
-      margin-top: 2px;
-    }
-
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ─── SECTIONS ─── */
-    .section {
-      padding: 6rem 2.5rem;
-    }
-    .section-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .section-label {
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--primary);
-      margin-bottom: 0.75rem;
-    }
-    .section-title {
-      font-family:"Raleway",  sans-serif;
-      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      color: var(--text);
-      margin-bottom: 1rem;
-    }
-    .section-desc {
-      font-size: 1.05rem;
-      color: var(--text2);
-      font-weight: 300;
-      max-width: 520px;
-      margin-bottom: 3rem;
-    }
-
-    /* ─── ABOUT ─── */
-    #about { background: var(--bg2); }
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 5rem;
-      align-items: center;
-    }
-    .about-visual {
-      position: relative;
-    }
-   .about-card-bg {
-  width: 100%;
-  aspect-ratio: 4/3;
-  border-radius: 24px;
-  overflow: hidden;
-  position: relative;
+/* ── TOKENS ── */
+:root {
+  --primary:       #0ea5e9;
+  --primary-light: #e0f2fe;
+  --primary-dark:  #0369a1;
+  --accent:        #06b6d4;
+  --accent2:       #818cf8;
+  --bg:            #f8fafc;
+  --bg2:           #ffffff;
+  --bg3:           #f0f9ff;
+  --text:          #0f172a;
+  --text2:         #475569;
+  --text3:         #94a3b8;
+  --border:        #e2e8f0;
+  --shadow-card:   0 4px 24px rgba(14,165,233,0.08), 0 1px 4px rgba(0,0,0,0.04);
+  --shadow-hover:  0 12px 40px rgba(14,165,233,0.18), 0 2px 8px rgba(0,0,0,0.08);
+  --nav-height:    68px;
 }
 
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── NAVBAR ── */
+.navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--nav-height);
+  display: flex; align-items: center; padding: 0 2.5rem;
+  background: rgba(248,250,252,0.85);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  transition: box-shadow 0.3s;
+}
+.navbar.scrolled { box-shadow: 0 4px 24px rgba(14,165,233,0.08); }
+.nav-inner {
+  max-width: 1100px; width: 100%; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-brand {
+  font-family: 'Raleway', sans-serif; font-weight: 800;
+  font-size: 1.2rem; color: var(--primary-dark);
+  text-decoration: none; letter-spacing: -0.02em;
+}
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a {
+  font-size: 0.9rem; font-weight: 500; color: var(--text2);
+  text-decoration: none; position: relative; transition: color 0.2s;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -3px; left: 0;
+  width: 0; height: 2px; background: var(--primary);
+  border-radius: 2px; transition: width 0.3s;
+}
+.nav-links a:hover { color: var(--primary); }
+.nav-links a:hover::after { width: 100%; }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh; display: flex; align-items: center;
+  padding: calc(var(--nav-height) + 4rem) 2.5rem 5rem;
+  position: relative; overflow: hidden;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 40%, #f8fafc 100%);
+}
+.hero::before {
+  content: ''; position: absolute; top: -200px; right: -200px;
+  width: 600px; height: 600px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(14,165,233,0.12) 0%, transparent 70%);
+  animation: float 8s ease-in-out infinite;
+}
+.hero::after {
+  content: ''; position: absolute; bottom: -150px; left: -150px;
+  width: 500px; height: 500px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(129,140,248,0.10) 0%, transparent 70%);
+  animation: float 10s ease-in-out infinite reverse;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%       { transform: translateY(-30px) scale(1.05); }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-inner { max-width: 1100px; width: 100%; margin: 0 auto; position: relative; z-index: 1; }
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 100px;
+  padding: 6px 16px; font-size: 0.82rem; font-weight: 500; color: var(--primary-dark);
+  margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(14,165,233,0.1);
+  opacity: 0; animation: slideUp 0.6s 0.1s forwards;
+}
+.hero-badge .dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--primary);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.6; transform: scale(1.3); }
+}
+
+.hero h1 {
+  font-family: 'Raleway', sans-serif;
+  font-size: clamp(2.8rem, 6vw, 5.5rem); font-weight: 800;
+  line-height: 1.05; letter-spacing: -0.03em; color: var(--text);
+  margin-bottom: 0.5rem; opacity: 0; animation: slideUp 0.7s 0.2s forwards;
+}
+.hero h1 .highlight { color: var(--primary); position: relative; }
+.hero h1 .highlight::after {
+  content: ''; position: absolute; bottom: 2px; left: 0; right: 0;
+  height: 4px; background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 2px; opacity: 0.3;
+}
+.hero-sub {
+  font-family: 'Raleway', sans-serif;
+  font-size: clamp(1.1rem, 2.5vw, 1.6rem); font-weight: 600; color: var(--text2);
+  margin-bottom: 1.5rem; opacity: 0; animation: slideUp 0.7s 0.3s forwards;
+}
+.hero-desc {
+  max-width: 560px; font-size: 1.05rem; color: var(--text2); font-weight: 300;
+  margin-bottom: 2.5rem; opacity: 0; animation: slideUp 0.7s 0.4s forwards;
+}
+.hero-ctas {
+  display: flex; gap: 1rem; flex-wrap: wrap;
+  opacity: 0; animation: slideUp 0.7s 0.5s forwards;
+}
+.hero-stats {
+  display: flex; gap: 3rem; margin-top: 4rem;
+  padding-top: 3rem; border-top: 1px solid var(--border);
+  opacity: 0; animation: slideUp 0.7s 0.65s forwards;
+}
+.stat-item { text-align: left; }
+.stat-num {
+  font-family: 'Raleway', sans-serif; font-size: 2rem; font-weight: 800;
+  color: var(--primary-dark); line-height: 1;
+}
+.stat-label { font-size: 0.82rem; color: var(--text3); font-weight: 400; margin-top: 2px; }
+
+/* ── BUTTONS ── */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--primary); color: #fff; font-weight: 500; font-size: 0.95rem;
+  padding: 12px 28px; border-radius: 100px; text-decoration: none;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 16px rgba(14,165,233,0.35);
+}
+.btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(14,165,233,0.45); }
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent; color: var(--primary-dark); font-weight: 500; font-size: 0.95rem;
+  padding: 12px 28px; border-radius: 100px; text-decoration: none;
+  border: 1.5px solid var(--primary); transition: background 0.2s, transform 0.2s;
+}
+.btn-secondary:hover { background: var(--primary-light); transform: translateY(-2px); }
+.btn-white {
+  background: #fff; color: var(--primary-dark); font-weight: 600; font-size: 0.95rem;
+  padding: 13px 28px; border-radius: 100px; border: none; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; transition: opacity 0.2s, transform 0.2s;
+}
+.btn-white:hover { opacity: 0.92; transform: translateY(-2px); }
+
+/* ── SECTIONS ── */
+.section { padding: 6rem 2.5rem; }
+.section-inner { max-width: 1100px; margin: 0 auto; }
+.section-label {
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--primary); margin-bottom: 0.75rem;
+}
+.section-title {
+  font-family: 'Raleway', sans-serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 800;
+  letter-spacing: -0.03em; color: var(--text); margin-bottom: 1rem;
+}
+.section-desc { font-size: 1.05rem; color: var(--text2); font-weight: 300; max-width: 520px; margin-bottom: 3rem; }
+
+/* ── ABOUT ── */
+#about { background: var(--bg2); }
+.about-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 5rem; align-items: center; }
+.about-visual { position: relative; }
+.about-card-bg {
+  width: 100%; aspect-ratio: 4/3; border-radius: 24px; overflow: hidden; position: relative;
+}
 .about-card-bg img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center top;
-  display: block;
-  transition: transform 0.4s ease;
+  width: 100%; height: 100%; object-fit: cover; object-position: center top;
+  display: block; transition: transform 0.4s ease;
+}
+.about-card-bg:hover img { transform: scale(1.04); }
+.about-floating {
+  position: absolute; bottom: -20px; right: -20px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 16px 20px; box-shadow: var(--shadow-card);
+}
+.about-floating-num {
+  font-family: 'Raleway', sans-serif; font-size: 1.8rem;
+  font-weight: 800; color: var(--primary-dark);
+}
+.about-floating-label { font-size: 0.8rem; color: var(--text3); }
+.skills-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 2rem; }
+.skill-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--primary-light); color: var(--primary-dark);
+  font-size: 0.82rem; font-weight: 500; padding: 6px 14px;
+  border-radius: 100px; border: 1px solid rgba(14,165,233,0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.skill-tag:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(14,165,233,0.2); }
+
+/* ── EXPERIENCE ── */
+#experience { background: var(--bg); }
+.exp-timeline { position: relative; padding-left: 2.5rem; }
+.exp-timeline::before {
+  content: ''; position: absolute; top: 0; left: 10px; bottom: 0; width: 2px;
+  background: linear-gradient(to bottom, var(--primary), var(--accent2), transparent);
+}
+.exp-item {
+  position: relative; margin-bottom: 3rem;
+  opacity: 0; transform: translateX(-20px);
+  transition: opacity 0.5s, transform 0.5s;
+}
+.exp-item.visible { opacity: 1; transform: translateX(0); }
+.exp-item::before {
+  content: ''; position: absolute; left: -2.05rem; top: 6px;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--primary); border: 3px solid var(--bg);
+  box-shadow: 0 0 0 3px rgba(14,165,233,0.2);
+}
+.exp-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 16px;
+  padding: 1.75rem 2rem; box-shadow: var(--shadow-card);
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.exp-card:hover { box-shadow: var(--shadow-hover); transform: translateX(6px); }
+.exp-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem; }
+.exp-title { font-family: 'Raleway', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--text); }
+.exp-company { font-size: 0.9rem; font-weight: 500; color: var(--primary); margin-top: 2px; }
+.exp-period { font-size: 0.8rem; font-weight: 500; color: var(--text3); background: var(--bg); padding: 4px 12px; border-radius: 100px; border: 1px solid var(--border); white-space: nowrap; }
+.exp-desc { font-size: 0.92rem; color: var(--text2); font-weight: 300; line-height: 1.7; }
+
+/* ── PROJECTS ── */
+#projects { background: var(--bg2); }
+.projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+.project-card {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 20px;
+  padding: 2rem; position: relative; overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  opacity: 0; transform: translateY(24px);
+}
+.project-card.visible { opacity: 1; transform: translateY(0); }
+.project-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--accent2));
+}
+.project-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); }
+.project-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  background: var(--primary-light); display: flex; align-items: center;
+  justify-content: center; margin-bottom: 1.25rem; font-size: 1.4rem;
+}
+.project-title { font-family: 'Raleway', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 0.75rem; }
+.project-desc { font-size: 0.9rem; color: var(--text2); font-weight: 300; line-height: 1.7; margin-bottom: 1.25rem; }
+.project-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.project-tag { font-size: 0.75rem; font-weight: 500; color: var(--primary-dark); background: var(--primary-light); padding: 3px 10px; border-radius: 100px; }
+
+/* ── CONTACT ── */
+#contact { background: linear-gradient(135deg, #0369a1 0%, #0ea5e9 50%, #06b6d4 100%); color: #fff; }
+#contact .section-label { color: rgba(255,255,255,0.7); }
+#contact .section-title { color: #fff; }
+#contact .section-desc { color: rgba(255,255,255,0.8); }
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+.contact-items { display: flex; flex-direction: column; gap: 1.25rem; }
+.contact-item {
+  display: flex; align-items: center; gap: 1rem;
+  background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 14px; padding: 1rem 1.25rem; text-decoration: none;
+  transition: background 0.2s, transform 0.2s;
+}
+.contact-item:hover { background: rgba(255,255,255,0.2); transform: translateX(6px); }
+.contact-icon {
+  width: 42px; height: 42px; border-radius: 10px;
+  background: rgba(255,255,255,0.2); display: flex; align-items: center;
+  justify-content: center; font-size: 1.1rem; flex-shrink: 0;
+}
+.contact-label { font-size: 0.78rem; font-weight: 500; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.08em; }
+.contact-value { font-size: 0.95rem; font-weight: 500; color: #fff; }
+.contact-form {
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 20px; padding: 2rem; display: flex; flex-direction: column; gap: 1rem;
+}
+.contact-form input, .contact-form textarea {
+  background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 10px; padding: 12px 16px; color: #fff;
+  font-family: 'DM Sans', sans-serif; font-size: 0.95rem; outline: none;
+  transition: border-color 0.2s, background 0.2s; resize: none;
+}
+.contact-form input::placeholder, .contact-form textarea::placeholder { color: rgba(255,255,255,0.5); }
+.contact-form input:focus, .contact-form textarea:focus { border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.18); }
+.contact-form textarea { min-height: 110px; }
+
+/* ── FOOTER ── */
+footer { text-align: center; padding: 2rem; background: var(--text); color: var(--text3); font-size: 0.85rem; }
+footer span { color: var(--primary); }
+
+/* ── SCROLL ANIMATIONS ── */
+.fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .hero-stats { gap: 1.5rem; }
+  .exp-timeline { padding-left: 1.5rem; }
+  .section { padding: 4rem 1.25rem; }
 }
 
-.about-card-bg:hover img {
-  transform: scale(1.04);
-}
-    .about-initials {
-      font-family:"Raleway",  sans-serif;
-      font-size: 6rem;
-      font-weight: 800;
-      color: var(--primary);
-      opacity: 0.25;
-      user-select: none;
-    }
-    .about-floating {
-      position: absolute;
-      bottom: -20px; right: -20px;
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px 20px;
-      box-shadow: var(--card-shadow);
-    }
-    .about-floating-num {
-      font-family:"Raleway",  sans-serif;
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: var(--primary-dark);
-    }
-    .about-floating-label {
-      font-size: 0.8rem;
-      color: var(--text3);
-    }
-    .skills-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 2rem;
-    }
-    .skill-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--primary-light);
-      color: var(--primary-dark);
-      font-size: 0.82rem;
-      font-weight: 500;
-      padding: 6px 14px;
-      border-radius: 100px;
-      border: 1px solid rgba(14,165,233,0.2);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .skill-tag:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(14,165,233,0.2);
-    }
-
-    /* ─── EXPERIENCE ─── */
-    #experience { background: var(--bg); }
-    .exp-timeline {
-      position: relative;
-      padding-left: 2.5rem;
-    }
-    .exp-timeline::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 10px;
-      bottom: 0; width: 2px;
-      background: linear-gradient(to bottom, var(--primary), var(--accent2), transparent);
-    }
-    .exp-item {
-      position: relative;
-      margin-bottom: 3rem;
-      opacity: 0;
-      transform: translateX(-20px);
-      transition: opacity 0.5s, transform 0.5s;
-    }
-    .exp-item.visible {
-      opacity: 1;
-      transform: translateX(0);
-    }
-    .exp-item::before {
-      content: '';
-      position: absolute;
-      left: -2.05rem;
-      top: 6px;
-      width: 14px; height: 14px;
-      border-radius: 50%;
-      background: var(--primary);
-      border: 3px solid var(--bg);
-      box-shadow: 0 0 0 3px rgba(14,165,233,0.2);
-    }
-    .exp-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 1.75rem 2rem;
-      box-shadow: var(--card-shadow);
-      transition: box-shadow 0.3s, transform 0.3s;
-    }
-    .exp-card:hover {
-      box-shadow: var(--card-shadow-hover);
-      transform: translateX(6px);
-    }
-    .exp-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 0.75rem;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-    .exp-title {
-      font-family:"Raleway",  sans-serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text);
-    }
-    .exp-company {
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: var(--primary);
-      margin-top: 2px;
-    }
-    .exp-period {
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: var(--text3);
-      background: var(--bg);
-      padding: 4px 12px;
-      border-radius: 100px;
-      border: 1px solid var(--border);
-      white-space: nowrap;
-    }
-    .exp-desc {
-      font-size: 0.92rem;
-      color: var(--text2);
-      font-weight: 300;
-      line-height: 1.7;
-    }
-
-    /* ─── PROJECTS ─── */
-    #projects { background: var(--bg2); }
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-    }
-    .project-card {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 2rem;
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.3s, box-shadow 0.3s;
-      opacity: 0;
-      transform: translateY(24px);
-    }
-    .project-card.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .project-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--primary), var(--accent2));
-    }
-    .project-card:hover {
-      transform: translateY(-8px);
-      box-shadow: var(--card-shadow-hover);
-    }
-    .project-icon {
-      width: 48px; height: 48px;
-      border-radius: 12px;
-      background: var(--primary-light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 1.25rem;
-      font-size: 1.4rem;
-    }
-    .project-title {
-      font-family:"Raleway",  sans-serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 0.75rem;
-    }
-    .project-desc {
-      font-size: 0.9rem;
-      color: var(--text2);
-      font-weight: 300;
-      line-height: 1.7;
-      margin-bottom: 1.25rem;
-    }
-    .project-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-    .project-tag {
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: var(--primary-dark);
-      background: var(--primary-light);
-      padding: 3px 10px;
-      border-radius: 100px;
-    }
-
-    /* ─── CONTACT ─── */
-    #contact {
-      background: linear-gradient(135deg, #0369a1 0%, #0ea5e9 50%, #06b6d4 100%);
-      color: #fff;
-    }
-    #contact .section-label { color: rgba(255,255,255,0.7); }
-    #contact .section-title { color: #fff; }
-    #contact .section-desc { color: rgba(255,255,255,0.8); }
-    .contact-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: center;
-    }
-    .contact-items {
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-    }
-    .contact-item {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 14px;
-      padding: 1rem 1.25rem;
-      text-decoration: none;
-      transition: background 0.2s, transform 0.2s;
-    }
-    .contact-item:hover {
-      background: rgba(255,255,255,0.2);
-      transform: translateX(6px);
-    }
-    .contact-icon {
-      width: 42px; height: 42px;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      flex-shrink: 0;
-    }
-    .contact-label {
-      font-size: 0.78rem;
-      font-weight: 500;
-      color: rgba(255,255,255,0.65);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-    .contact-value {
-      font-size: 0.95rem;
-      font-weight: 500;
-      color: #fff;
-    }
-    .contact-form {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 20px;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-    .contact-form input,
-    .contact-form textarea {
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.25);
-      border-radius: 10px;
-      padding: 12px 16px;
-      color: #fff;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.95rem;
-      outline: none;
-      transition: border-color 0.2s, background 0.2s;
-      resize: none;
-    }
-    .contact-form input::placeholder,
-    .contact-form textarea::placeholder { color: rgba(255,255,255,0.5); }
-    .contact-form input:focus,
-    .contact-form textarea:focus {
-      border-color: rgba(255,255,255,0.6);
-      background: rgba(255,255,255,0.18);
-    }
-    .contact-form textarea { min-height: 110px; }
-    .btn-white {
-      background: #fff;
-      color: var(--primary-dark);
-      font-weight: 600;
-      font-size: 0.95rem;
-      padding: 13px 28px;
-      border-radius: 100px;
-      border: none;
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      transition: opacity 0.2s, transform 0.2s;
-    }
-    .btn-white:hover { opacity: 0.92; transform: translateY(-2px); }
-
-    /* ─── FOOTER ─── */
-    footer {
-      text-align: center;
-      padding: 2rem;
-      background: var(--text);
-      color: var(--text3);
-      font-size: 0.85rem;
-    }
-    footer span { color: var(--primary); }
-
-    /* ─── SCROLL ANIMATION ─── */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ─── RESPONSIVE ─── */
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-      .contact-grid { grid-template-columns: 1fr; }
-      .hero-stats { gap: 1.5rem; }
-      .exp-timeline { padding-left: 1.5rem; }
-    }
   </style>
-</head>
+  <meta name="description" content="Senior Full Stack .NET Developer — building scalable enterprise systems with .NET, Azure, and modern web technologies.">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+
+  <!-- Styles --></head>
 <body>
 
 <!-- NAVBAR -->
 <nav class="navbar" id="navbar">
   <div class="nav-inner">
-    <a href="#home" class="nav-brand">SK</a>
+    <a href="#home" class="nav-brand">Shahnaz Kulsoom</a>
     <ul class="nav-links">
       <li><a href="#home">Home</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#experience">Experience</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#contact">Contact</a></li>
-      <!-- ✅ NEW: Blog link -->
-      <li class="nav-blog"><a href="blog/">Blog</a></li>
+      <li><a href="blog/index.html" style="color:var(--primary);font-weight:600;">Blog</a></li>
     </ul>
   </div>
 </nav>
@@ -720,7 +371,7 @@
     <p class="hero-desc">Building scalable enterprise systems with .NET, Azure, and modern web technologies. Passionate about performance, clean architecture, and delivering real business value.</p>
     <div class="hero-ctas">
       <a href="#projects" class="btn-primary">View My Work →</a>
-      <a href="#contact" class="btn-secondary">Get In Touch</a>
+      <a href="#contact"  class="btn-secondary">Get In Touch</a>
     </div>
     <div class="hero-stats">
       <div class="stat-item">
@@ -745,7 +396,7 @@
     <div class="about-grid">
       <div class="about-visual fade-in">
         <div class="about-card-bg">
-          <img src="1729433286192.jpeg" alt="Shahnaz Kulsoom" />
+          <img src="assets/images/profile.jpeg" alt="Shahnaz Kulsoom" />
         </div>
         <div class="about-floating">
           <div class="about-floating-num">9+</div>
@@ -755,8 +406,8 @@
       <div class="fade-in">
         <div class="section-label">About Me</div>
         <h2 class="section-title">Crafting digital<br>solutions that scale</h2>
-        <p class="section-desc" style="margin-bottom: 1rem;">Software Engineer with extensive experience in building scalable applications using .NET technologies, microservices architecture, and cloud platforms like Azure.</p>
-        <p style="font-size:0.95rem; color: var(--text2); font-weight: 300; margin-bottom: 1.5rem;">Strong background in performance optimization, CI/CD pipelines, and delivering high-quality enterprise solutions across aviation, fintech, and manufacturing industries.</p>
+        <p class="section-desc" style="margin-bottom:1rem;">Software Engineer with extensive experience in building scalable applications using .NET technologies, microservices architecture, and cloud platforms like Azure.</p>
+        <p style="font-size:0.95rem;color:var(--text2);font-weight:300;margin-bottom:1.5rem;">Strong background in performance optimization, CI/CD pipelines, and delivering high-quality enterprise solutions across aviation, fintech, and manufacturing industries.</p>
         <div class="skills-grid">
           <span class="skill-tag">⚡ .NET 8 / Core</span>
           <span class="skill-tag">☁️ Microsoft Azure</span>
@@ -784,6 +435,7 @@
       <p class="section-desc">A track record of delivering high-impact solutions across enterprise environments.</p>
     </div>
     <div class="exp-timeline">
+
       <div class="exp-item">
         <div class="exp-card">
           <div class="exp-header">
@@ -796,6 +448,7 @@
           <p class="exp-desc">Built scalable applications using .NET 8 and Angular, optimized performance, implemented CI/CD pipelines using Azure DevOps, and improved API performance using Redis caching. Led architecture decisions and mentored junior developers.</p>
         </div>
       </div>
+
       <div class="exp-item">
         <div class="exp-card">
           <div class="exp-header">
@@ -808,6 +461,7 @@
           <p class="exp-desc">Developed airline booking platform supporting millions of users. Optimized APIs, implemented caching strategies, and collaborated with cross-functional teams to deliver high-availability systems.</p>
         </div>
       </div>
+
       <div class="exp-item">
         <div class="exp-card">
           <div class="exp-header">
@@ -820,6 +474,7 @@
           <p class="exp-desc">Modernized legacy Silverlight systems to .NET Core, worked with Angular, jQuery, and Azure cloud services. Improved system performance by 40% through database query optimization.</p>
         </div>
       </div>
+
       <div class="exp-item">
         <div class="exp-card">
           <div class="exp-header">
@@ -832,6 +487,7 @@
           <p class="exp-desc">Worked on .NET-based enterprise applications, REST APIs, and full SDLC processes. Delivered multiple client-facing products from requirement gathering to production deployment.</p>
         </div>
       </div>
+
     </div>
   </div>
 </section>
@@ -845,6 +501,7 @@
       <p class="section-desc">A selection of enterprise solutions and products I've architected and delivered.</p>
     </div>
     <div class="projects-grid">
+
       <div class="project-card">
         <div class="project-icon">📊</div>
         <div class="project-title">Supplier Performance System</div>
@@ -856,6 +513,7 @@
           <span class="project-tag">Azure</span>
         </div>
       </div>
+
       <div class="project-card">
         <div class="project-icon">💰</div>
         <div class="project-title">Netsol Financial Suite</div>
@@ -867,6 +525,7 @@
           <span class="project-tag">Migration</span>
         </div>
       </div>
+
       <div class="project-card">
         <div class="project-icon">✈️</div>
         <div class="project-title">Airline Booking Platform</div>
@@ -878,6 +537,7 @@
           <span class="project-tag">Redis</span>
         </div>
       </div>
+
       <div class="project-card">
         <div class="project-icon">🌸</div>
         <div class="project-title">Joes Bloom (BNG Tool)</div>
@@ -888,6 +548,7 @@
           <span class="project-tag">REST API</span>
         </div>
       </div>
+
     </div>
   </div>
 </section>
@@ -908,11 +569,11 @@
               <div class="contact-value">shahnaz.kulsoom19@gmail.com</div>
             </div>
           </a>
-          <a class="contact-item" href="tel:+923208416384">
+          <a class="contact-item" href="tel:+447555860456">
             <div class="contact-icon">📞</div>
             <div>
               <div class="contact-label">Phone</div>
-              <div class="contact-value">+44 7555860456</div>
+              <div class="contact-value">+44 7555 860456</div>
             </div>
           </a>
           <div class="contact-item">
@@ -925,80 +586,90 @@
         </div>
       </div>
       <div class="contact-form fade-in">
-  <input type="text" id="name" placeholder="Your Name" />
-  <input type="email" id="email" placeholder="Your Email" />
-  <textarea id="message" placeholder="Tell me about your project..."></textarea>
-  <button class="btn-white" onclick="sendToGmail()">Send Message →</button>
-</div>
+        <input type="text"  id="name"    placeholder="Your Name" />
+        <input type="email" id="email"   placeholder="Your Email" />
+        <textarea           id="message" placeholder="Tell me about your project..."></textarea>
+        <button class="btn-white" onclick="sendToGmail()">Send Message →</button>
+      </div>
     </div>
   </div>
 </section>
 
 <footer>
-  <p>© 2026 <span>Shahnaz Kulsoom</span> · Senior Full Stack .NET Developer · Lahore, Pakistan</p>
+  <p>© 2026 <span>Shahnaz Kulsoom</span> · Senior Full Stack .NET Developer · Leeds, UK</p>
 </footer>
 
+<!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>
-  window.onload = function() {
-    emailjs.init('3O3Zc7-zFkAMY-cZv');
-  };
+  <script>
+/* ═══════════════════════════════════════════════════
+   main.js — Portfolio Scripts
+   Shahnaz Kulsoom · shahnaz-kulsoom.dev
+   ═══════════════════════════════════════════════════ */
 
-  // Navbar scroll effect
-  const navbar = document.getElementById('navbar');
-  window.addEventListener('scroll', () => {
-    navbar.classList.toggle('scrolled', window.scrollY > 20);
-  });
+'use strict';
 
-  // Scroll reveal
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
-      if (entry.isIntersecting) {
-        setTimeout(() => {
-          entry.target.classList.add('visible');
-        }, entry.target.dataset.delay || 0);
-      }
-    });
-  }, { threshold: 0.12 });
+/* ── EMAILJS INIT ── */
+window.onload = function () {
+  if (window.emailjs) emailjs.init('3O3Zc7-zFkAMY-cZv');
+};
 
-  document.querySelectorAll('.fade-in, .exp-item, .project-card').forEach((el, i) => {
-    el.dataset.delay = (i % 4) * 100;
-    observer.observe(el);
-  });
+/* ── NAVBAR SCROLL ── */
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 20);
+});
 
-  // Project card stagger
-  document.querySelectorAll('.project-card').forEach((card, i) => {
-    card.style.transitionDelay = `${i * 0.1}s`;
-  });
-
-  function sendToGmail() {
-    const name    = document.getElementById('name').value.trim();
-    const email   = document.getElementById('email').value.trim();
-    const message = document.getElementById('message').value.trim();
-
-    if (!name || !email || !message) {
-      alert('Please fill all fields!');
-      return;
+/* ── SCROLL REVEAL ── */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      setTimeout(() => {
+        entry.target.classList.add('visible');
+      }, entry.target.dataset.delay || 0);
     }
+  });
+}, { threshold: 0.12 });
 
-    emailjs.send('service_lflga8i', 'template_d0gs36n', {
-      from_name:  name,
-      from_email: email,
-      message:    message,
-      to_email:   'shahnaz.kulsoom19@gmail.com'
-    })
-    .then(() => {
-      alert('Message sent successfully! ✅');
-      document.getElementById('name').value    = '';
-      document.getElementById('email').value   = '';
-      document.getElementById('message').value = '';
-    }
-    )
-    .catch((error) => {
-      console.error('EmailJS error:', error);
-      alert('Something went wrong. Please try again.');
-    });
+document.querySelectorAll('.fade-in, .exp-item, .project-card').forEach((el, i) => {
+  el.dataset.delay = (i % 4) * 100;
+  observer.observe(el);
+});
+
+/* ── PROJECT CARD STAGGER ── */
+document.querySelectorAll('.project-card').forEach((card, i) => {
+  card.style.transitionDelay = `${i * 0.1}s`;
+});
+
+/* ── CONTACT FORM ── */
+function sendToGmail() {
+  const name    = document.getElementById('name').value.trim();
+  const email   = document.getElementById('email').value.trim();
+  const message = document.getElementById('message').value.trim();
+
+  if (!name || !email || !message) {
+    alert('Please fill all fields!');
+    return;
   }
-</script>
+
+  emailjs.send('service_lflga8i', 'template_d0gs36n', {
+    from_name:  name,
+    from_email: email,
+    message:    message,
+    to_email:   'shahnaz.kulsoom19@gmail.com'
+  })
+  .then(() => {
+    alert('Message sent successfully! ✅');
+    document.getElementById('name').value    = '';
+    document.getElementById('email').value   = '';
+    document.getElementById('message').value = '';
+  })
+  .catch(error => {
+    console.error('EmailJS error:', error);
+    alert('Something went wrong. Please try again.');
+  });
+}
+
+  </script>
 </body>
 </html>
