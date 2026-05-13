@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog | Shahnaz Kulsoom</title>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #0ea5e9;
+      --primary-light: #e0f2fe;
+      --primary-dark: #0369a1;
+      --accent: #06b6d4;
+      --accent2: #818cf8;
+      --bg: #f8fafc;
+      --bg2: #ffffff;
+      --text: #0f172a;
+      --text2: #475569;
+      --text3: #94a3b8;
+      --border: #e2e8f0;
+      --card-shadow: 0 4px 24px rgba(14,165,233,0.08), 0 1px 4px rgba(0,0,0,0.04);
+      --card-shadow-hover: 0 12px 40px rgba(14,165,233,0.18), 0 2px 8px rgba(0,0,0,0.08);
+      --nav-height: 68px;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAVBAR ─── */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: var(--nav-height);
+      display: flex;
+      align-items: center;
+      padding: 0 2.5rem;
+      background: rgba(248,250,252,0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 4px 24px rgba(14,165,233,0.06);
+    }
+    .nav-inner {
+      max-width: 1100px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: var(--primary-dark);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text2);
+      text-decoration: none;
+      position: relative;
+      transition: color 0.2s;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 2px;
+      background: var(--primary);
+      border-radius: 2px;
+      transition: width 0.3s;
+    }
+    .nav-links a:hover { color: var(--primary); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links .nav-blog a {
+      background: var(--primary);
+      color: #fff;
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .nav-links .nav-blog a::after { display: none; }
+    .nav-links .nav-blog a:hover {
+      background: var(--primary-dark);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    /* ─── HERO ─── */
+    .blog-hero {
+      padding: calc(var(--nav-height) + 4rem) 2.5rem 4rem;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 40%, #f8fafc 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .blog-hero::before {
+      content: '';
+      position: absolute;
+      top: -100px; right: -100px;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(14,165,233,0.1) 0%, transparent 70%);
+      animation: float 8s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+    .blog-hero-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .section-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+    }
+    .blog-hero h1 {
+      font-family: 'Raleway', sans-serif;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    .blog-hero h1 span { color: var(--primary); }
+    .blog-hero p {
+      font-size: 1.05rem;
+      color: var(--text2);
+      font-weight: 300;
+      max-width: 540px;
+    }
+
+    /* ─── POST COUNT BADGE ─── */
+    .post-count {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 1.25rem;
+      font-size: 0.82rem;
+      color: var(--text3);
+      font-weight: 400;
+    }
+    .post-count strong {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* ─── BLOG SECTION ─── */
+    .blog-section {
+      padding: 4rem 2.5rem 6rem;
+    }
+    .blog-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 2rem;
+    }
+
+    /* ─── BLOG CARD ─── */
+    .blog-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      transition: transform 0.3s, box-shadow 0.3s;
+      opacity: 0;
+      transform: translateY(24px);
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+    }
+    .blog-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.55s ease, transform 0.55s ease, box-shadow 0.3s, transform 0.3s;
+    }
+    .blog-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--card-shadow-hover);
+    }
+    .blog-card-top {
+      height: 6px;
+      background: linear-gradient(90deg, var(--primary), var(--accent2));
+    }
+    .blog-card-body {
+      padding: 1.75rem 2rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .blog-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .blog-category {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--primary-dark);
+      background: var(--primary-light);
+      padding: 3px 10px;
+      border-radius: 100px;
+      border: 1px solid rgba(14,165,233,0.2);
+    }
+    .blog-date {
+      font-size: 0.8rem;
+      color: var(--text3);
+      font-weight: 400;
+    }
+    .blog-read-time {
+      font-size: 0.8rem;
+      color: var(--text3);
+    }
+    .blog-card-title {
+      font-family: 'Raleway', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+      line-height: 1.35;
+    }
+    .blog-card-excerpt {
+      font-size: 0.9rem;
+      color: var(--text2);
+      font-weight: 300;
+      line-height: 1.7;
+      flex: 1;
+      margin-bottom: 1.5rem;
+    }
+    .blog-card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--primary-dark);
+      text-decoration: none;
+      transition: gap 0.2s, color 0.2s;
+    }
+    .blog-card-link:hover {
+      color: var(--primary);
+      gap: 10px;
+    }
+
+    /* ─── EMPTY STATE ─── */
+    .blog-empty {
+      text-align: center;
+      padding: 5rem 2rem;
+      color: var(--text3);
+      grid-column: 1 / -1;
+    }
+    .blog-empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .blog-empty h3 {
+      font-family: 'Raleway', sans-serif;
+      font-size: 1.4rem;
+      color: var(--text2);
+      margin-bottom: 0.5rem;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background: var(--text);
+      color: var(--text3);
+      font-size: 0.85rem;
+    }
+    footer span { color: var(--primary); }
+
+    /* ─── FADE IN ─── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .blog-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-brand">Shahnaz Kulsoom</a>
+    <ul class="nav-links">
+      <li><a href="../index.html#home">Home</a></li>
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#experience">Experience</a></li>
+      <li><a href="../index.html#projects">Projects</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+      <li class="nav-blog"><a href="../blog/">Blog</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="blog-hero">
+  <div class="blog-hero-inner fade-in">
+    <div class="section-label">Writing & Insights</div>
+    <h1>My <span>Blog</span></h1>
+    <p>Thoughts on .NET architecture, Azure, performance optimization, and lessons learned building enterprise software.</p>
+    <div class="post-count"><strong id="post-count-num">0</strong> posts published</div>
+  </div>
+</div>
+
+<!-- BLOG LISTING — rendered by posts.js -->
+<section class="blog-section">
+  <div class="blog-inner">
+    <div class="blog-grid" id="blog-grid">
+      <!-- cards injected by JS -->
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 <span>Shahnaz Kulsoom</span> · Senior Full Stack .NET Developer</p>
+</footer>
+
+<script>
+  // ─────────────────────────────────────────────
+  //  ADD / EDIT POSTS HERE
+  // ─────────────────────────────────────────────
+  const POSTS = [
+    {
+      slug:     "why-i-switched-to-dotnet-8",
+      title:    "Why I Switched from .NET 6 to .NET 8 and Never Looked Back",
+      category: ".NET",
+      date:     "May 2026",
+      readTime: "5 min read",
+      excerpt:  "A practical walkthrough of the performance gains, new APIs, and developer experience improvements that made .NET 8 a game-changer for our enterprise projects."
+    },
+    {
+      slug:     "redis-caching-strategies",
+      title:    "Redis Caching Strategies That Cut Our API Response Time by 60%",
+      category: "Azure",
+      date:     "April 2026",
+      readTime: "7 min read",
+      excerpt:  "Real-world patterns for using Redis in .NET microservices — from cache-aside to pub/sub, with code examples from production systems."
+    }
+    // Add more posts here ↑
+  ];
+</script>
+
+<script>
+  const grid = document.getElementById('blog-grid');
+  const countEl = document.getElementById('post-count-num');
+
+  function renderPosts() {
+    countEl.textContent = POSTS.length;
+
+    if (!POSTS.length) {
+      grid.innerHTML = `
+        <div class="blog-empty">
+          <div class="blog-empty-icon">✍️</div>
+          <h3>No posts yet</h3>
+          <p>Check back soon — something is brewing.</p>
+        </div>`;
+      return;
+    }
+
+    grid.innerHTML = POSTS.map(post => `
+      <article class="blog-card" onclick="location.href='${post.slug}.html'">
+        <div class="blog-card-top"></div>
+        <div class="blog-card-body">
+          <div class="blog-meta">
+            <span class="blog-category">${post.category}</span>
+            <span class="blog-date">${post.date}</span>
+            <span class="blog-read-time">· ${post.readTime}</span>
+          </div>
+          <h2 class="blog-card-title">${post.title}</h2>
+          <p class="blog-card-excerpt">${post.excerpt}</p>
+          <a href="${post.slug}.html" class="blog-card-link">Read post →</a>
+        </div>
+      </article>
+    `).join('');
+
+    // Scroll animation
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.fade-in, .blog-card').forEach((el, i) => {
+      el.style.transitionDelay = `${(i % 3) * 0.08}s`;
+      observer.observe(el);
+    });
+  }
+
+  renderPosts();
+</script>
+</body>
+</html>

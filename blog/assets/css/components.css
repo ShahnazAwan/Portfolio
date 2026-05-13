@@ -1,0 +1,204 @@
+/* ═══════════════════════════════════════════════════
+   components.css — Cards · Badges · Post Content
+                    Callouts · Code Blocks · Buttons
+   Depends on: base.css
+   ═══════════════════════════════════════════════════ */
+
+/* ── BADGE ── */
+.badge {
+  display: inline-block;
+  font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--primary-dark); background: var(--primary-light);
+  padding: 3px 10px; border-radius: var(--radius-pill);
+  border: 1px solid rgba(14,165,233,0.2);
+}
+
+/* ── FILTER TAG ── */
+.filter-tag {
+  font-size: 0.72rem; font-weight: 600;
+  padding: 4px 13px; border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: var(--bg-card); color: var(--text-muted);
+  cursor: pointer; transition: all 0.15s; letter-spacing: 0.04em;
+}
+.filter-tag:hover { border-color: var(--primary); color: var(--primary); }
+.filter-tag.is-active {
+  background: var(--primary); color: #fff; border-color: var(--primary);
+}
+
+/* ── BLOG CARD ── */
+.blog-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.25s, box-shadow 0.25s;
+  opacity: 0; transform: translateY(16px);
+  display: flex; flex-direction: column; cursor: pointer;
+}
+.blog-card.is-visible {
+  opacity: 1; transform: translateY(0);
+  transition: opacity 0.5s ease, transform 0.5s ease,
+              box-shadow 0.25s, border-color 0.25s;
+}
+.blog-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+.blog-card__stripe {
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--accent2));
+}
+.blog-card__body {
+  padding: 1.5rem 1.75rem; flex: 1;
+  display: flex; flex-direction: column;
+}
+.blog-card__meta {
+  display: flex; align-items: center; gap: 0.6rem;
+  margin-bottom: 0.85rem; flex-wrap: wrap;
+}
+.blog-card__date, .blog-card__rt { font-size: 0.78rem; color: var(--text-subtle); }
+.blog-card__title {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.08rem; font-weight: 700;
+  color: var(--text); margin-bottom: 0.6rem; line-height: 1.35;
+}
+.blog-card__excerpt {
+  font-size: 0.875rem; color: var(--text-muted);
+  font-weight: 300; line-height: 1.7;
+  flex: 1; margin-bottom: 1.25rem;
+}
+.blog-card__cta {
+  font-size: 0.85rem; font-weight: 600;
+  color: var(--primary-dark);
+  display: inline-flex; align-items: center; gap: 5px;
+  transition: gap var(--transition), color var(--transition);
+}
+.blog-card:hover .blog-card__cta { color: var(--primary); gap: 9px; }
+
+/* ── POST CONTENT ── */
+.post-content { padding: 3rem 0 5rem; }
+
+.post-content h2 {
+  font-size: 1.35rem; font-weight: 700;
+  color: var(--text); margin: 2.25rem 0 0.85rem;
+  letter-spacing: -0.02em;
+}
+.post-content h3 {
+  font-size: 1.1rem; font-weight: 600;
+  color: var(--text); margin: 1.75rem 0 0.65rem;
+}
+.post-content p {
+  font-size: 0.975rem; color: var(--text-muted);
+  font-weight: 300; margin-bottom: 1.35rem; line-height: 1.85;
+}
+.post-content strong { color: var(--text); font-weight: 500; }
+.post-content em { font-style: italic; }
+.post-content a {
+  color: var(--primary-dark); text-decoration: underline;
+  text-decoration-color: rgba(14,165,233,0.35);
+  text-underline-offset: 3px;
+  transition: color var(--transition);
+}
+.post-content a:hover { color: var(--primary); }
+.post-content ul, .post-content ol {
+  padding-left: 1.5rem; margin-bottom: 1.35rem;
+  color: var(--text-muted); font-weight: 300;
+}
+.post-content li { margin-bottom: 0.4rem; line-height: 1.75; font-size: 0.975rem; }
+.post-content hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+
+/* ── BLOCKQUOTE ── */
+.post-content blockquote {
+  border-left: 3px solid var(--primary);
+  background: var(--primary-light);
+  padding: 1rem 1.25rem; border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  margin: 1.5rem 0; font-style: italic; color: var(--primary-dark);
+}
+
+/* ── INLINE CODE ── */
+.post-content code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.85em;
+  background: var(--primary-light); color: var(--primary-dark);
+  padding: 2px 6px; border-radius: var(--radius-sm);
+}
+
+/* ── CODE BLOCK ── */
+.post-content pre {
+  background: var(--bg-dark); border-radius: var(--radius-md);
+  padding: 1.4rem 1.5rem; margin: 1.5rem 0;
+  overflow-x: auto; border: 1px solid var(--border-dark);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+}
+.post-content pre code {
+  background: transparent; color: #e2e8f0;
+  font-size: 0.86rem; padding: 0; border-radius: 0; line-height: 1.7;
+}
+
+/* ── CALLOUT ── */
+.callout {
+  display: flex; gap: 0.75rem; padding: 1rem 1.25rem;
+  border-radius: var(--radius-md); margin: 1.5rem 0; font-size: 0.92rem;
+}
+.callout__icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+.callout--tip   { background: var(--success-bg); border: 1px solid var(--success-border); color: var(--success-text); }
+.callout--warn  { background: var(--warn-bg);    border: 1px solid var(--warn-border);    color: var(--warn-text); }
+.callout--info  { background: var(--info-bg);    border: 1px solid var(--info-border);    color: var(--info-text); }
+
+/* ── INLINE CODE BLOCK (composer addon) ── */
+.pc-code-block {
+  margin: 1.25rem 0; border-radius: var(--radius-md); overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+}
+.pc-code-bar {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px; background: var(--bg-dark-raised);
+}
+.pc-code-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.pc-code-file {
+  margin-left: auto; font-size: 0.62rem;
+  font-family: 'JetBrains Mono', monospace; color: var(--text-subtle);
+}
+.pc-code-pre {
+  background: var(--bg-dark); margin: 0; padding: 1.1rem 1.25rem;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+  line-height: 1.7; color: #e2e8f0; white-space: pre-wrap; word-break: break-word;
+}
+
+/* ── COMPARE BLOCK (composer addon) ── */
+.pc-compare-block { margin: 1.25rem 0; }
+.pc-compare-label {
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text-subtle); margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.pc-compare-label::before, .pc-compare-label::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+.pc-compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pc-cmp-panel { border-radius: var(--radius-md); overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+.pc-cmp-bar { display: flex; align-items: center; gap: 8px; padding: 7px 12px; font-size: 0.7rem; font-weight: 700; }
+.pc-cmp-bar--good { background: #14532d; color: #86efac; }
+.pc-cmp-bar--bad  { background: #7f1d1d; color: #fca5a5; }
+.pc-cmp-pre {
+  background: var(--bg-dark); margin: 0; padding: 0.85rem 1rem;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
+  line-height: 1.65; color: #e2e8f0; white-space: pre-wrap; word-break: break-word;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 7px 16px; border-radius: var(--radius-md);
+  font-size: 0.8rem; font-weight: 600; cursor: pointer;
+  border: none; font-family: inherit; transition: all 0.18s; white-space: nowrap;
+}
+.btn--primary { background: var(--primary); color: #fff; }
+.btn--primary:hover { background: var(--primary-dark); }
+.btn--dark { background: var(--bg-dark); color: #e2e8f0; }
+.btn--dark:hover { background: var(--bg-dark-raised); }
+.btn--outline { background: transparent; color: var(--primary-dark); border: 1px solid var(--primary); }
+.btn--outline:hover { background: var(--primary-light); }
+.btn--ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+.btn--ghost:hover { border-color: var(--primary); color: var(--primary); }
+.btn--export { background: linear-gradient(135deg, var(--primary), var(--accent2)); color: #fff; }
+.btn--export:hover { opacity: 0.88; transform: translateY(-1px); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }

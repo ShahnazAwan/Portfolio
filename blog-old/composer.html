@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post Composer | Shahnaz Kulsoom</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;800&family=Raleway:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display:ital,wght@0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --primary: #0ea5e9; --primary-light: #e0f2fe; --primary-dark: #0369a1;
+  --bg: #f8fafc; --bg2: #fff;
+  --text: #0f172a; --text2: #475569; --text3: #94a3b8;
+  --border: #e2e8f0;
+  --nav: 60px;
+}
+html { font-size: 16px; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+/* ── TOPBAR ── */
+.topbar {
+  height: var(--nav); display: flex; align-items: center;
+  padding: 0 1.5rem; background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  gap: 1rem; flex-shrink: 0;
+  box-shadow: 0 1px 12px rgba(14,165,233,0.06);
+}
+.brand { font-family: 'Raleway', sans-serif; font-weight: 800; font-size: 1rem; color: var(--primary-dark); text-decoration: none; }
+.brand span { color: var(--text3); font-weight: 400; font-size: 0.78rem; margin-left: 6px; font-family: 'DM Sans', sans-serif; }
+.topbar-right { margin-left: auto; display: flex; gap: 0.6rem; align-items: center; }
+.btn { padding: 7px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; transition: all 0.18s; white-space: nowrap; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-dark { background: #0f172a; color: #e2e8f0; }
+.btn-dark:hover { background: #1e293b; }
+.btn-outline { background: transparent; color: var(--primary-dark); border: 1px solid var(--primary); }
+.btn-outline:hover { background: var(--primary-light); }
+.btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border); }
+.btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+.btn-export { background: linear-gradient(135deg, #0ea5e9, #818cf8); color: #fff; border: none; }
+.btn-export:hover { opacity: 0.88; transform: translateY(-1px); }
+
+/* ── MAIN SPLIT ── */
+.workspace { display: grid; grid-template-columns: 420px 1fr; flex: 1; overflow: hidden; }
+
+/* ── LEFT PANEL ── */
+.left-panel { display: flex; flex-direction: column; border-right: 1px solid var(--border); overflow-y: auto; background: var(--bg2); }
+
+/* ── NEW TEMPLATE PICKER ── */
+.tpl-group { border-bottom: 1px solid var(--border); }
+.tpl-group:last-child { border-bottom: none; }
+.tpl-group-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 0.75rem 1.25rem 0.5rem;
+}
+.tpl-group-icon { font-size: 0.85rem; color: var(--primary); }
+.tpl-group-label { font-size: 0.78rem; font-weight: 700; color: var(--text); }
+.tpl-group-desc { font-size: 0.68rem; color: var(--text3); margin-left: auto; }
+.tpl-row {
+  display: flex; gap: 8px; padding: 0 1.25rem 1rem;
+  overflow-x: auto; scrollbar-width: none;
+}
+.tpl-row::-webkit-scrollbar { display: none; }
+.tpl-card2 {
+  flex-shrink: 0; width: 88px; cursor: pointer;
+  border-radius: 10px; overflow: hidden;
+  border: 2px solid var(--border);
+  background: var(--bg2);
+  transition: all 0.18s; position: relative;
+}
+.tpl-card2:hover { border-color: #94c8e8; transform: translateY(-1px); }
+.tpl-card2.active { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(14,165,233,0.15); }
+.tpl-thumb {
+  width: 100%; height: 60px; overflow: hidden;
+  display: flex; flex-direction: column;
+  justify-content: flex-start; padding: 7px 7px 5px;
+}
+.tpl-thumb[style*="aspect-ratio"] { height: 72px; }
+.tpl-info {
+  padding: 5px 7px 6px; display: flex; flex-direction: column; gap: 1px;
+  background: var(--bg2);
+}
+.tpl-title2 { font-size: 0.7rem; font-weight: 700; color: var(--text); }
+.tpl-hint { font-size: 0.6rem; color: var(--text3); }
+
+/* Code Post featured card */
+.tpl-code-featured { border-color: #334155; }
+.tpl-code-featured:hover { border-color: #7dd3fc; }
+.tpl-code-featured.active { border-color: #7dd3fc; box-shadow: 0 0 0 3px rgba(125,211,252,0.2); }
+.tpl-badge-code {
+  position: absolute; top: 5px; right: 5px; z-index: 2;
+  background: #7dd3fc; color: #0f172a;
+  font-size: 0.48rem; font-weight: 800; letter-spacing: 0.04em;
+  padding: 2px 5px; border-radius: 100px; white-space: nowrap;
+  text-transform: uppercase;
+}
+
+/* Fake template preview bars — keep for fallback */
+.bar { border-radius: 2px; }
+
+/* Form fields */
+.fields { display: flex; flex-direction: column; gap: 0; flex: 1; }
+.field { padding: 0.9rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); }
+.field label span { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--text3); font-size: 0.68rem; }
+.field input, .field textarea, .field select {
+  width: 100%; font-size: 0.9rem; padding: 9px 12px;
+  border: 1px solid var(--border); border-radius: 8px;
+  background: var(--bg); color: var(--text);
+  font-family: 'DM Sans', sans-serif; outline: none;
+  transition: border-color 0.15s;
+}
+.field input:focus, .field textarea:focus, .field select:focus { border-color: var(--primary); background: #fff; }
+#f-title { font-size: 1rem; font-weight: 600; }
+#f-body { min-height: 200px; line-height: 1.75; resize: vertical; font-size: 0.88rem; }
+.char-count { font-size: 0.68rem; color: var(--text3); text-align: right; }
+
+/* Category tags */
+.cat-row { display: flex; flex-wrap: wrap; gap: 5px; }
+.cat { font-size: 0.7rem; padding: 3px 10px; border-radius: 100px; border: 1px solid var(--border); color: var(--text2); cursor: pointer; background: var(--bg); transition: all 0.15s; user-select: none; }
+.cat:hover { border-color: var(--primary); color: var(--primary); }
+.cat.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+/* ── RIGHT PANEL — PREVIEW ── */
+.right-panel {
+  overflow-y: auto; background: #c8cdd4;
+  background-image: radial-gradient(circle, #b0b5bc 1px, transparent 1px);
+  background-size: 20px 20px;
+  display: flex; flex-direction: column; align-items: center; padding: 2rem 1.5rem; gap: 1rem;
+}
+.preview-label {
+  font-size: 0.66rem; font-weight: 700; color: #555e6b;
+  letter-spacing: 0.1em; text-transform: uppercase; align-self: flex-start;
+  background: rgba(255,255,255,0.75); padding: 3px 10px; border-radius: 100px;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+/* Canva-style canvas wrapper */
+.canvas-wrap {
+  position: relative; flex-shrink: 0;
+  box-shadow: 0 16px 56px rgba(0,0,0,0.28), 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 12px; overflow: hidden;
+}
+
+/* Fit indicator */
+.fit-bar-wrap { align-self: stretch; display: flex; align-items: center; gap: 8px; }
+.fit-label { font-size: 0.63rem; font-weight: 600; color: #6b7280; white-space: nowrap; }
+.fit-bar { flex: 1; height: 4px; background: rgba(255,255,255,0.35); border-radius: 2px; overflow: hidden; }
+.fit-fill { height: 100%; border-radius: 2px; transition: width 0.3s, background 0.3s; background: #22c55e; }
+.fit-fill.warn { background: #f59e0b; }
+.fit-fill.over { background: #ef4444; }
+.fit-pct { font-size: 0.63rem; font-weight: 700; color: #6b7280; min-width: 30px; text-align: right; }
+.fit-tip { font-size: 0.63rem; color: #ef4444; font-weight: 500; display: none; }
+.fit-tip.show { display: block; }
+
+/* The actual post card preview */
+#preview-card {
+  width: 680px; max-width: 100%;
+  border-radius: 0; overflow: hidden;
+  background: #fff;
+  display: flex; flex-direction: column;
+}
+
+/* ══════════════════════════════════════
+   TEMPLATE 1 — "Sky"
+══════════════════════════════════════ */
+.tpl-sky #pc-hero {
+  padding: 1.75rem 2.25rem 1.5rem;
+  background: #fff;
+  border-top: 3px solid #0ea5e9;
+  position: relative;
+}
+.tpl-sky #pc-cat {
+  display: inline-block; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #0369a1; background: #e0f2fe;
+  padding: 2px 9px; border-radius: 100px; border: 1px solid rgba(14,165,233,0.2);
+  margin-bottom: 0.7rem;
+}
+.tpl-sky #pc-title {
+  font-family: 'Raleway', sans-serif; font-size: 1.35rem; font-weight: 700;
+  letter-spacing: -0.02em; line-height: 1.3; color: #0f172a; margin-bottom: 0.4rem;
+}
+.tpl-sky #pc-subtitle { font-size: 0.82rem; color: #64748b; font-weight: 400; line-height: 1.55; margin-bottom: 0.75rem; }
+.tpl-sky #pc-meta { font-size: 0.7rem; color: #94a3b8; display: flex; gap: 0.5rem; align-items: center; }
+.tpl-sky #pc-meta span { color: #0ea5e9; font-weight: 600; }
+.tpl-sky #pc-body { padding: 1.5rem 2.25rem 2rem; border-top: 1px solid #f1f5f9; }
+.tpl-sky #pc-body p { font-size: 0.88rem; color: #475569; font-weight: 400; line-height: 1.8; margin-bottom: 1rem; }
+.tpl-sky #pc-body h2 { font-family: 'Raleway', sans-serif; font-size: 1rem; font-weight: 700; color: #0f172a; margin: 1.5rem 0 0.5rem; letter-spacing: -0.01em; }
+.tpl-sky #pc-footer { padding: 0.85rem 2.25rem; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; }
+.tpl-sky #pc-footer span { font-size: 0.68rem; color: #94a3b8; }
+.tpl-sky #pc-footer strong { color: #0ea5e9; }
+
+/* ══════════════════════════════════════
+   TEMPLATE 2 — "Noir"
+══════════════════════════════════════ */
+.tpl-noir { background: #0f172a !important; }
+.tpl-noir #pc-hero { padding: 1.75rem 2.25rem 1.5rem; background: #0f172a; border-top: 3px solid #38bdf8; }
+.tpl-noir #pc-cat {
+  display: inline-block; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #38bdf8; background: rgba(56,189,248,0.1);
+  padding: 2px 9px; border-radius: 100px; border: 1px solid rgba(56,189,248,0.2);
+  margin-bottom: 0.7rem;
+}
+.tpl-noir #pc-title {
+  font-family: 'Raleway', sans-serif; font-size: 1.35rem; font-weight: 700;
+  letter-spacing: -0.02em; line-height: 1.3; color: #f1f5f9; margin-bottom: 0.4rem;
+}
+.tpl-noir #pc-subtitle { font-size: 0.82rem; color: #64748b; font-weight: 400; line-height: 1.55; margin-bottom: 0.75rem; }
+.tpl-noir #pc-meta { font-size: 0.7rem; color: #334155; display: flex; gap: 0.5rem; align-items: center; }
+.tpl-noir #pc-meta span { color: #38bdf8; font-weight: 600; }
+.tpl-noir #pc-body { padding: 1.5rem 2.25rem 2rem; background: #0f172a; border-top: 1px solid #1e293b; }
+.tpl-noir #pc-body p { font-size: 0.88rem; color: #94a3b8; font-weight: 400; line-height: 1.8; margin-bottom: 1rem; }
+.tpl-noir #pc-body h2 { font-family: 'Raleway', sans-serif; font-size: 1rem; font-weight: 700; color: #e2e8f0; margin: 1.5rem 0 0.5rem; letter-spacing: -0.01em; }
+.tpl-noir #pc-footer { padding: 0.85rem 2.25rem; border-top: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center; background: #0a0f1a; }
+.tpl-noir #pc-footer span { font-size: 0.68rem; color: #334155; }
+.tpl-noir #pc-footer strong { color: #38bdf8; }
+
+/* ══════════════════════════════════════
+   TEMPLATE 3 — "Serif"
+══════════════════════════════════════ */
+.tpl-serif { background: #fffdf7 !important; }
+.tpl-serif #pc-hero {
+  padding: 1.75rem 2.25rem 1.5rem;
+  background: #fffdf7;
+  border-top: 3px solid #d4a853;
+}
+.tpl-serif #pc-cat {
+  display: inline-block; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.15em;
+  text-transform: uppercase; color: #92400e;
+  margin-bottom: 0.7rem;
+}
+.tpl-serif #pc-title {
+  font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700;
+  line-height: 1.3; color: #1c1208; margin-bottom: 0.4rem;
+}
+.tpl-serif #pc-subtitle { font-family: 'Playfair Display', serif; font-size: 0.85rem; color: #78350f; font-style: italic; font-weight: 400; line-height: 1.5; margin-bottom: 0.75rem; }
+.tpl-serif #pc-meta { font-size: 0.68rem; color: #a16207; display: flex; gap: 0.5rem; align-items: center; }
+.tpl-serif #pc-meta span { color: #d4a853; font-weight: 600; }
+.tpl-serif #pc-body { padding: 1.5rem 2.25rem 2rem; background: #fffdf7; border-top: 1px solid #f0d9a0; }
+.tpl-serif #pc-body p { font-size: 0.9rem; color: #44310a; line-height: 1.85; margin-bottom: 1rem; font-family: 'Playfair Display', serif; font-weight: 400; }
+.tpl-serif #pc-body h2 { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: #1c1208; margin: 1.5rem 0 0.5rem; border-left: 2px solid #d4a853; padding-left: 0.6rem; }
+.tpl-serif #pc-footer { padding: 0.85rem 2.25rem; border-top: 1px solid #f0d9a0; display: flex; justify-content: space-between; align-items: center; background: #fffdf7; }
+.tpl-serif #pc-footer span { font-size: 0.68rem; color: #a16207; }
+.tpl-serif #pc-footer strong { color: #d4a853; }
+
+/* ══════════════════════════════════════
+   TEMPLATE 4 — "Mint"
+══════════════════════════════════════ */
+.tpl-mint { background: #f0fdf4 !important; }
+.tpl-mint #pc-hero { padding: 1.75rem 2.25rem 1.5rem; background: #f0fdf4; border-top: 3px solid #16a34a; }
+.tpl-mint #pc-cat {
+  display: inline-block; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #14532d; background: #dcfce7;
+  padding: 2px 9px; border-radius: 100px; border: 1px solid #86efac;
+  margin-bottom: 0.7rem;
+}
+.tpl-mint #pc-title {
+  font-family: 'Raleway', sans-serif; font-size: 1.35rem; font-weight: 700;
+  letter-spacing: -0.02em; line-height: 1.3; color: #052e16; margin-bottom: 0.4rem;
+}
+.tpl-mint #pc-subtitle { font-size: 0.82rem; color: #166534; font-weight: 400; line-height: 1.55; margin-bottom: 0.75rem; }
+.tpl-mint #pc-meta { font-size: 0.7rem; color: #86efac; display: flex; gap: 0.5rem; align-items: center; }
+.tpl-mint #pc-meta span { color: #16a34a; font-weight: 600; }
+.tpl-mint #pc-body { padding: 1.5rem 2.25rem 2rem; background: #f0fdf4; border-top: 1px solid #bbf7d0; }
+.tpl-mint #pc-body p { font-size: 0.88rem; color: #166534; font-weight: 400; line-height: 1.8; margin-bottom: 1rem; }
+.tpl-mint #pc-body h2 { font-family: 'Raleway', sans-serif; font-size: 1rem; font-weight: 700; color: #052e16; margin: 1.5rem 0 0.5rem; }
+.tpl-mint #pc-footer { padding: 0.85rem 2.25rem; border-top: 1px solid #bbf7d0; display: flex; justify-content: space-between; align-items: center; background: #f0fdf4; }
+.tpl-mint #pc-footer span { font-size: 0.68rem; color: #86efac; }
+.tpl-mint #pc-footer strong { color: #16a34a; }
+
+/* ══════════════════════════════════════
+   TEMPLATE 5 — "Mono"
+══════════════════════════════════════ */
+.tpl-mono { background: #1a1a2e !important; }
+.tpl-mono #pc-hero { padding: 1.75rem 2.25rem 1.5rem; background: #1a1a2e; border-top: 3px solid #a78bfa; }
+.tpl-mono #pc-cat {
+  display: inline-block; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.08em;
+  font-family: 'JetBrains Mono', monospace;
+  color: #a78bfa; background: rgba(167,139,250,0.1);
+  padding: 2px 9px; border-radius: 4px; border: 1px solid rgba(167,139,250,0.2);
+  margin-bottom: 0.7rem;
+}
+.tpl-mono #pc-title {
+  font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 500;
+  line-height: 1.35; color: #e2e8f0; margin-bottom: 0.4rem;
+}
+.tpl-mono #pc-title::before { content: '// '; color: #4b5563; }
+.tpl-mono #pc-subtitle { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #4b5563; line-height: 1.6; margin-bottom: 0.75rem; }
+.tpl-mono #pc-subtitle::before { content: '/* '; } .tpl-mono #pc-subtitle::after { content: ' */'; }
+.tpl-mono #pc-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: #4b5563; display: flex; gap: 0.5rem; align-items: center; }
+.tpl-mono #pc-meta span { color: #a78bfa; font-weight: 600; }
+.tpl-mono #pc-body { padding: 1.5rem 2.25rem 2rem; background: #1a1a2e; border-top: 1px solid #2d2d44; }
+.tpl-mono #pc-body p { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: #9ca3af; line-height: 1.85; margin-bottom: 1rem; }
+.tpl-mono #pc-body h2 { font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; font-weight: 500; color: #a78bfa; margin: 1.5rem 0 0.5rem; }
+.tpl-mono #pc-body h2::before { content: '## '; color: #4b5563; }
+.tpl-mono #pc-footer { padding: 0.85rem 2.25rem; border-top: 1px solid #2d2d44; display: flex; justify-content: space-between; align-items: center; background: #12121f; }
+.tpl-mono #pc-footer span { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: #4b5563; }
+.tpl-mono #pc-footer strong { color: #a78bfa; }
+
+/* ══════════════════════════════════════
+   TEMPLATE 6 — "Blush"
+══════════════════════════════════════ */
+.tpl-blush { background: #fff5f5 !important; }
+.tpl-blush #pc-hero { padding: 1.75rem 2.25rem 1.5rem; background: #fff5f5; border-top: 3px solid #e11d48; }
+.tpl-blush #pc-cat {
+  display: inline-block; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #9f1239; background: #fecdd3;
+  padding: 2px 9px; border-radius: 100px; border: 1px solid #fda4af;
+  margin-bottom: 0.7rem;
+}
+.tpl-blush #pc-title {
+  font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700;
+  line-height: 1.3; color: #4c0519; margin-bottom: 0.4rem;
+}
+.tpl-blush #pc-subtitle { font-size: 0.82rem; color: #881337; font-style: italic; font-weight: 400; line-height: 1.55; margin-bottom: 0.75rem; }
+.tpl-blush #pc-meta { font-size: 0.7rem; color: #fda4af; display: flex; gap: 0.5rem; align-items: center; }
+.tpl-blush #pc-meta span { color: #e11d48; font-weight: 600; }
+.tpl-blush #pc-body { padding: 1.5rem 2.25rem 2rem; background: #fff5f5; border-top: 1px solid #fecdd3; }
+.tpl-blush #pc-body p { font-size: 0.88rem; color: #881337; font-weight: 400; line-height: 1.8; margin-bottom: 1rem; }
+.tpl-blush #pc-body h2 { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: #4c0519; margin: 1.5rem 0 0.5rem; }
+.tpl-blush #pc-footer { padding: 0.85rem 2.25rem; border-top: 1px solid #fecdd3; display: flex; justify-content: space-between; align-items: center; background: #fff0f0; }
+.tpl-blush #pc-footer span { font-size: 0.68rem; color: #fda4af; }
+.tpl-blush #pc-footer strong { color: #e11d48; }
+
+/* ══════════════════════════════════════
+   LINKEDIN TEMPLATES — square 1:1 cards
+   These use #li-* IDs instead of #pc-*
+══════════════════════════════════════ */
+
+/* LinkedIn card sizing — strict 560×560 canvas, content clipped like Canva */
+#preview-card.li-mode {
+  width: 560px; height: 560px;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+/* LI body gets a max-height so content doesn't push footer off */
+#preview-card.li-mode #pc-body {
+  flex: 1; overflow: hidden; min-height: 0;
+}
+
+/* ══════════════════════════════════════════════════════
+   LINKEDIN TEMPLATES — redesigned, spacious, no LI icon
+   Category shown as a clean pill tag instead
+══════════════════════════════════════════════════════ */
+
+/* Shared LinkedIn footer — author card style */
+.li-mode #pc-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.1rem 2.5rem; margin-top: auto;
+}
+.li-mode #pc-footer .li-author { display: flex; flex-direction: column; gap: 2px; }
+.li-mode #pc-footer .li-name { font-size: 0.88rem; font-weight: 700; line-height: 1.2; }
+.li-mode #pc-footer .li-handle { font-size: 0.72rem; opacity: 0.5; font-weight: 400; }
+.li-mode #pc-footer .li-actions { display: flex; gap: 14px; align-items: center; opacity: 0.35; }
+.li-mode #pc-footer .li-actions svg { width: 20px; height: 20px; stroke-width: 1.8; fill: none; }
+
+/* ── LI-1: "Pulse" — clean white professional ── */
+.tpl-li-pulse { background: #fff !important; }
+.tpl-li-pulse #pc-hero {
+  background: #fff; padding: 1.8rem 2.8rem 0.5rem;
+}
+.tpl-li-pulse #pc-cat {
+  display: inline-block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #0a66c2; background: #dbeafe;
+  padding: 4px 12px; border-radius: 100px; margin-bottom: 1.25rem;
+}
+.tpl-li-pulse #pc-title { font-family: 'Raleway', sans-serif; font-size: 1.75rem; font-weight: 800; line-height: 1.2; color: #0f172a; letter-spacing: -0.03em; margin-bottom: 0; }
+.tpl-li-pulse #pc-subtitle { display: none; }
+.tpl-li-pulse #pc-meta { display: none; }
+.tpl-li-pulse #pc-body { padding: 1.75rem 2.8rem 1.5rem; flex: 1;  margin-top: 0rem; }
+.tpl-li-pulse #pc-body p { font-size: 0.93rem; color: #334155; line-height: 1.85; margin-bottom: 1rem; font-weight: 400; }
+.tpl-li-pulse #pc-body h2 { font-family: 'Raleway', sans-serif; font-size: 1rem; font-weight: 700; color: #0a66c2; margin: 1.4rem 0 0.5rem; }
+.tpl-li-pulse #pc-footer { border-top: 1px solid #f1f5f9; background: #f8fafc; padding: 1.1rem 2.8rem; }
+.tpl-li-pulse #pc-footer .li-name { color: #0f172a; }
+.tpl-li-pulse #pc-footer .li-actions svg { stroke: #0a66c2; }
+
+/* ── LI-2: "Navy" — dark authority ── */
+.tpl-li-navy { background: #0f2b4d !important; }
+.tpl-li-navy #pc-hero { background: #0f2b4d; padding: 2.8rem 2.8rem 1.5rem; }
+.tpl-li-navy #pc-cat {
+  display: inline-block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #93c5fd; background: rgba(147,197,253,0.12);
+  padding: 4px 12px; border-radius: 100px; margin-bottom: 1.25rem;
+  border: 1px solid rgba(147,197,253,0.2);
+}
+.tpl-li-navy #pc-title { font-family: 'Raleway', sans-serif; font-size: 1.75rem; font-weight: 800; line-height: 1.2; color: #f0f9ff; letter-spacing: -0.03em; }
+.tpl-li-navy #pc-subtitle { display: none; }
+.tpl-li-navy #pc-meta { display: none; }
+.tpl-li-navy #pc-body { padding: 1.75rem 2.8rem 1.5rem; flex: 1; border-top: 1px solid #1e4d8c; margin-top: 1.5rem; }
+.tpl-li-navy #pc-body p { font-size: 0.93rem; color: #94a3b8; line-height: 1.85; margin-bottom: 1rem; }
+.tpl-li-navy #pc-body h2 { font-family: 'Raleway', sans-serif; font-size: 1rem; font-weight: 700; color: #60a5fa; margin: 1.4rem 0 0.5rem; }
+.tpl-li-navy #pc-footer { border-top: 1px solid #1e3a5f; background: #0a1f3d; padding: 1.1rem 2.8rem; }
+.tpl-li-navy #pc-footer .li-name { color: #e2e8f0; }
+.tpl-li-navy #pc-footer .li-handle { color: #64748b !important; opacity: 1; }
+.tpl-li-navy #pc-footer .li-actions svg { stroke: #60a5fa; }
+
+/* ── LI-3: "Gold" — warm achievement ── */
+.tpl-li-gold { background: #1c1208 !important; }
+.tpl-li-gold #pc-hero { background: linear-gradient(160deg, #1c1208 60%, #2d1f0a 100%); padding: 2.8rem 2.8rem 1.5rem; }
+.tpl-li-gold #pc-cat {
+  display: inline-block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #d4a853; background: rgba(212,168,83,0.12);
+  padding: 4px 12px; border-radius: 100px; margin-bottom: 1.25rem;
+  border: 1px solid rgba(212,168,83,0.25);
+}
+.tpl-li-gold #pc-title { font-family: 'Playfair Display', serif; font-size: 1.75rem; font-weight: 700; line-height: 1.2; color: #fef3c7; }
+.tpl-li-gold #pc-subtitle { display: none; }
+.tpl-li-gold #pc-meta { display: none; }
+.tpl-li-gold #pc-body { padding: 1.75rem 2.8rem 1.5rem; flex: 1; border-top: 1px solid rgba(212,168,83,0.25); margin-top: 1.5rem; }
+.tpl-li-gold #pc-body p { font-size: 0.93rem; color: #b8956a; line-height: 1.85; margin-bottom: 1rem; font-weight: 300; }
+.tpl-li-gold #pc-body h2 { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: #d4a853; margin: 1.4rem 0 0.5rem; }
+.tpl-li-gold #pc-footer { border-top: 1px solid rgba(212,168,83,0.15); background: #120d05; padding: 1.1rem 2.8rem; }
+.tpl-li-gold #pc-footer .li-name { color: #fef3c7; }
+.tpl-li-gold #pc-footer .li-actions svg { stroke: #d4a853; }
+
+/* ── LI-4: "Coral" — bold vibrant ── */
+.tpl-li-coral { background: #fff !important; }
+.tpl-li-coral #pc-hero { background: linear-gradient(140deg, #ff6b35 0%, #ff9a6c 100%); padding: 2.8rem 2.8rem 2rem; }
+.tpl-li-coral #pc-cat {
+  display: inline-block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #fff; background: rgba(255,255,255,0.2);
+  padding: 4px 12px; border-radius: 100px; margin-bottom: 1.25rem;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+.tpl-li-coral #pc-title { font-family: 'Raleway', sans-serif; font-size: 1.75rem; font-weight: 800; line-height: 1.2; color: #fff; letter-spacing: -0.03em; }
+.tpl-li-coral #pc-subtitle { display: none; }
+.tpl-li-coral #pc-meta { display: none; }
+.tpl-li-coral #pc-body { padding: 1.75rem 2.8rem 1.5rem; flex: 1; background: #fff; }
+.tpl-li-coral #pc-body p { font-size: 0.93rem; color: #374151; line-height: 1.85; margin-bottom: 1rem; }
+.tpl-li-coral #pc-body h2 { font-family: 'Raleway', sans-serif; font-size: 1rem; font-weight: 700; color: #ff6b35; margin: 1.4rem 0 0.5rem; }
+.tpl-li-coral #pc-footer { border-top: 1px solid #f3f4f6; background: #fff; padding: 1.1rem 2.8rem; }
+.tpl-li-coral #pc-footer .li-name { color: #111827; }
+.tpl-li-coral #pc-footer .li-actions svg { stroke: #ff6b35; }
+
+/* ── LI-5: "Code Post" — developer tip card ── */
+.tpl-li-code { background: #0f172a !important; }
+.tpl-li-code #pc-hero {
+  background: #0f172a;
+  padding: 2.2rem 2.8rem 1.25rem;
+}
+.tpl-li-code #pc-cat {
+  display: inline-block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #7dd3fc; background: rgba(125,211,252,0.1);
+  padding: 4px 12px; border-radius: 100px; margin-bottom: 1.1rem;
+  border: 1px solid rgba(125,211,252,0.2);
+}
+.tpl-li-code #pc-title {
+  font-family: 'Raleway', sans-serif; font-size: 1.45rem; font-weight: 800;
+  line-height: 1.25; color: #f1f5f9; letter-spacing: -0.02em;
+}
+.tpl-li-code #pc-subtitle { display: none; }
+.tpl-li-code #pc-meta { display: none; }
+
+/* Code window inside the card */
+.tpl-li-code #pc-body {
+  padding: 0 2.8rem 0; flex: 1; display: flex; flex-direction: column; gap: 0;
+}
+.tpl-li-code #pc-body .li-code-window {
+  background: #1e293b; border-radius: 10px; overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4); margin-bottom: 1.25rem;
+}
+.tpl-li-code #pc-body .li-code-winbar {
+  background: #0f172a; padding: 8px 14px; display: flex; align-items: center; gap: 6px;
+}
+.tpl-li-code #pc-body .li-code-dot { width: 10px; height: 10px; border-radius: 50%; }
+.tpl-li-code #pc-body .li-code-filetag {
+  margin-left: auto; font-size: 0.62rem; font-family: 'JetBrains Mono', monospace;
+  color: #475569; font-weight: 500;
+}
+.tpl-li-code #pc-body pre {
+  margin: 0; padding: 1.1rem 1.25rem; overflow-x: hidden; background: #1e293b;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; line-height: 1.7;
+  color: #e2e8f0; white-space: pre-wrap; word-break: break-word; border-radius: 0;
+  box-shadow: none; border: none;
+}
+.tpl-li-code #pc-body .li-takeaway {
+  display: flex; flex-direction: column; gap: 5px; padding-bottom: 1.25rem;
+}
+.tpl-li-code #pc-body .li-takeaway-item {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 0.82rem; color: #94a3b8; line-height: 1.55;
+}
+.tpl-li-code #pc-body .li-takeaway-item::before {
+  content: '→'; color: #7dd3fc; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+}
+.tpl-li-code #pc-body p { display: none; }
+.tpl-li-code #pc-body h2 { display: none; }
+
+.tpl-li-code #pc-footer {
+  border-top: 1px solid #1e293b; background: #0a0f1a; padding: 1.1rem 2.8rem;
+}
+.tpl-li-code #pc-footer .li-name { color: #e2e8f0; }
+.tpl-li-code #pc-footer .li-actions svg { stroke: #7dd3fc; }
+
+/* Section divider label */
+.section-divider { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text3); background: var(--bg); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border); display: inline-block; margin: 6px 0 4px; }
+
+/* Mode tabs */
+.mode-tab { padding: 6px 14px; font-size: 0.78rem; font-weight: 600; background: var(--bg); border: none; cursor: pointer; color: var(--text3); transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+.mode-tab.active { background: var(--primary); color: #fff; }
+
+/* ══════════════════════════════════════
+   CODE CARD PANEL
+══════════════════════════════════════ */
+.code-panel { display: none; flex: 1; overflow: hidden; }
+.code-panel.active { display: grid; grid-template-columns: 320px 1fr; }
+
+/* Code left sidebar */
+.code-sidebar { background: var(--bg2); border-right: 1px solid var(--border); overflow-y: auto; display: flex; flex-direction: column; }
+.code-field { padding: 0.9rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 6px; }
+.code-field label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); }
+.code-field input, .code-field select, .code-field textarea { width: 100%; font-size: 0.85rem; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.15s; }
+.code-field input:focus, .code-field select:focus, .code-field textarea:focus { border-color: var(--primary); background: #fff; }
+#code-input { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; min-height: 220px; resize: vertical; line-height: 1.6; }
+
+/* Theme swatches */
+.theme-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.theme-swatch { height: 36px; border-radius: 6px; cursor: pointer; border: 2px solid transparent; transition: all 0.15s; display: flex; align-items: center; justify-content: center; font-size: 0.55rem; font-weight: 700; letter-spacing: 0.04em; }
+.theme-swatch.active { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(14,165,233,0.2); }
+.theme-swatch:hover { transform: scale(1.05); }
+
+/* Background gradient swatches */
+.bg-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.bg-swatch { height: 30px; border-radius: 6px; cursor: pointer; border: 2px solid transparent; transition: all 0.15s; }
+.bg-swatch.active { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(14,165,233,0.2); }
+.bg-swatch:hover { transform: scale(1.05); }
+
+/* Font size slider */
+.slider-row { display: flex; align-items: center; gap: 8px; }
+.slider-row input[type=range] { flex: 1; }
+.slider-val { font-size: 0.75rem; font-weight: 600; color: var(--primary-dark); min-width: 28px; text-align: right; }
+
+/* Code right preview */
+.code-preview-panel { background: #d1d5db; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 2rem 1.5rem; gap: 1rem; overflow-y: auto; }
+
+/* The code card itself */
+#code-card {
+  width: 640px; max-width: 100%; border-radius: 14px;
+  overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  transition: all 0.2s;
+}
+#code-card-bg {
+  padding: 2rem;
+  border-radius: 14px;
+}
+#code-window {
+  border-radius: 10px; overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+}
+.window-bar {
+  height: 36px; display: flex; align-items: center;
+  padding: 0 14px; gap: 7px;
+}
+.win-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+.win-title { font-size: 0.72rem; font-weight: 500; margin-left: auto; margin-right: auto; opacity: 0.6; font-family: 'DM Sans', sans-serif; }
+#code-display {
+  margin: 0; padding: 1.5rem !important; overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace !important;
+  line-height: 1.65 !important; border-radius: 0 !important;
+  box-shadow: none !important; border: none !important;
+}
+/* Caption area below code window */
+#code-caption-area { padding: 0.75rem 0 0; }
+#code-caption-el { font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500; opacity: 0.85; }
+#code-author-el { font-family: 'DM Sans', sans-serif; font-size: 0.7rem; opacity: 0.55; margin-top: 3px; }
+
+/* ── ADDON FIELDS (code + compare) ── */
+.addon-field { padding: 0 !important; border-bottom: 1px solid var(--border); }
+.addon-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.85rem 1.25rem; cursor: pointer; user-select: none;
+  transition: background 0.15s;
+}
+.addon-header:hover { background: var(--bg); }
+.addon-left { display: flex; align-items: center; gap: 10px; }
+.addon-icon {
+  width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.addon-title { font-size: 0.8rem; font-weight: 600; color: var(--text); }
+.addon-sub { font-size: 0.68rem; color: var(--text3); margin-top: 1px; }
+.addon-toggle {
+  width: 36px; height: 20px; border-radius: 100px;
+  background: var(--border); position: relative; flex-shrink: 0;
+  transition: background 0.2s;
+}
+.addon-toggle.on { background: var(--primary); }
+.addon-switch {
+  width: 16px; height: 16px; border-radius: 50%; background: #fff;
+  position: absolute; top: 2px; left: 2px;
+  transition: left 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.addon-toggle.on .addon-switch { left: 18px; }
+.addon-body { border-top: 1px solid var(--border); }
+.addon-inner { padding: 0.85rem 1.25rem 1rem; }
+.inner-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text3); margin-bottom: 4px; }
+.good-label { color: #16a34a; }
+.bad-label { color: #dc2626; }
+
+/* ── INLINE CODE WINDOW in preview ── */
+.pc-code-block {
+  margin: 1.25rem 0;
+  border-radius: 10px; overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+.pc-code-bar {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px; background: #1e293b;
+}
+.pc-code-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.pc-code-file { margin-left: auto; font-size: 0.62rem; font-family: 'JetBrains Mono', monospace; color: #475569; }
+.pc-code-pre {
+  background: #0f172a; margin: 0; padding: 1.1rem 1.25rem;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+  line-height: 1.7; color: #e2e8f0;
+  white-space: pre-wrap; word-break: break-word; overflow-x: hidden;
+}
+
+/* ── COMPARE BLOCK in preview ── */
+.pc-compare-block { margin: 1.25rem 0; }
+.pc-compare-label {
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text3); margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.pc-compare-label::before, .pc-compare-label::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+.pc-compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pc-cmp-panel { border-radius: 10px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.18); }
+.pc-cmp-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 12px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.02em;
+}
+.pc-cmp-bar.good { background: #14532d; color: #86efac; }
+.pc-cmp-bar.bad  { background: #7f1d1d; color: #fca5a5; }
+.pc-cmp-pre {
+  background: #0f172a; margin: 0; padding: 0.85rem 1rem;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
+  line-height: 1.65; color: #e2e8f0;
+  white-space: pre-wrap; word-break: break-word; overflow-x: hidden;
+}
+
+/* Toast */
+.toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: #0f172a; color: #fff; padding: 0.7rem 1.1rem; border-radius: 10px; font-size: 0.82rem; transform: translateY(60px); opacity: 0; transition: all 0.3s; z-index: 999; pointer-events: none; }
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* Download spinner */
+.btn.loading { opacity: 0.7; cursor: wait; }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <a href="index.html" class="brand">Shahnaz Kulsoom <span>Post Composer</span></a>
+  <!-- MODE TABS -->
+  <div style="display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-left:1rem;">
+    <button class="mode-tab active" id="tab-post" onclick="switchMode('post')">📝 Post</button>
+    <button class="mode-tab" id="tab-li" onclick="switchMode('li')">💼 LinkedIn</button>
+    <button class="mode-tab" id="tab-code" onclick="switchMode('code')">💻 Code Card</button>
+  </div>
+  <div class="topbar-right">
+    <button class="btn btn-ghost" onclick="resetForm()" id="reset-btn">↺ Reset</button>
+    <button class="btn btn-outline" onclick="downloadImage()" id="img-btn">⬇ Image</button>
+    <button class="btn btn-dark" onclick="downloadPDF()" id="pdf-btn">⬇ PDF</button>
+    <button class="btn btn-export" onclick="exportPostFile()" id="export-btn" title="Exports a .js file for your blog + a metadata line for posts.js">⬇ Export Post File</button>
+  </div>
+</header>
+
+<div id="post-panel" class="workspace">
+
+  <!-- LEFT: FORM -->
+  <div class="left-panel">
+
+    <!-- Template picker -->
+    <div class="section" style="padding:0;">
+
+      <!-- Blog Post group -->
+      <div class="tpl-group">
+        <div class="tpl-group-header">
+          <span class="tpl-group-icon">✦</span>
+          <span class="tpl-group-label">Blog Post</span>
+          <span class="tpl-group-desc">Wide format · title, body, PDF</span>
+        </div>
+        <div class="tpl-row">
+
+          <div class="tpl-card2 active" data-tpl="sky" onclick="setTemplate('sky',this)">
+            <div class="tpl-thumb" style="background:linear-gradient(135deg,#f0f9ff,#dbeafe);">
+              <div style="height:5px;background:#0ea5e9;border-radius:2px;width:35%;margin-bottom:5px;"></div>
+              <div style="height:8px;background:#0f172a;border-radius:2px;width:80%;margin-bottom:3px;"></div>
+              <div style="height:8px;background:#0f172a;border-radius:2px;width:55%;margin-bottom:5px;"></div>
+              <div style="height:3px;background:#94a3b8;border-radius:1px;width:90%;margin-bottom:2px;"></div>
+              <div style="height:3px;background:#94a3b8;border-radius:1px;width:75%;"></div>
+            </div>
+            <div class="tpl-info"><span class="tpl-title2">Sky</span><span class="tpl-hint">Blue gradient</span></div>
+          </div>
+
+          <div class="tpl-card2" data-tpl="noir" onclick="setTemplate('noir',this)">
+            <div class="tpl-thumb" style="background:#0f172a;">
+              <div style="height:5px;background:#38bdf8;border-radius:2px;width:35%;margin-bottom:5px;"></div>
+              <div style="height:8px;background:#e2e8f0;border-radius:2px;width:80%;margin-bottom:3px;"></div>
+              <div style="height:8px;background:#e2e8f0;border-radius:2px;width:55%;margin-bottom:5px;"></div>
+              <div style="height:3px;background:#334155;border-radius:1px;width:90%;margin-bottom:2px;"></div>
+              <div style="height:3px;background:#334155;border-radius:1px;width:75%;"></div>
+            </div>
+            <div class="tpl-info"><span class="tpl-title2">Noir</span><span class="tpl-hint">Dark editorial</span></div>
+          </div>
+
+          <div class="tpl-card2" data-tpl="serif" onclick="setTemplate('serif',this)">
+            <div class="tpl-thumb" style="background:#fffdf7;border-top:3px solid #d4a853;">
+              <div style="height:5px;background:#92400e;border-radius:2px;width:30%;margin-bottom:5px;opacity:0.6;"></div>
+              <div style="height:9px;background:#1c1208;border-radius:2px;width:80%;margin-bottom:3px;"></div>
+              <div style="height:9px;background:#1c1208;border-radius:2px;width:50%;margin-bottom:5px;"></div>
+              <div style="height:3px;background:#78350f;border-radius:1px;width:90%;margin-bottom:2px;opacity:0.5;"></div>
+              <div style="height:3px;background:#78350f;border-radius:1px;width:70%;opacity:0.5;"></div>
+            </div>
+            <div class="tpl-info"><span class="tpl-title2">Serif</span><span class="tpl-hint">Magazine warm</span></div>
+          </div>
+
+          <div class="tpl-card2" data-tpl="mint" onclick="setTemplate('mint',this)">
+            <div class="tpl-thumb" style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);">
+              <div style="height:5px;background:#16a34a;border-radius:2px;width:35%;margin-bottom:5px;"></div>
+              <div style="height:8px;background:#052e16;border-radius:2px;width:80%;margin-bottom:3px;"></div>
+              <div style="height:8px;background:#052e16;border-radius:2px;width:55%;margin-bottom:5px;"></div>
+              <div style="height:3px;background:#166534;border-radius:1px;width:90%;margin-bottom:2px;"></div>
+              <div style="height:3px;background:#166534;border-radius:1px;width:75%;"></div>
+            </div>
+            <div class="tpl-info"><span class="tpl-title2">Mint</span><span class="tpl-hint">Fresh green</span></div>
+          </div>
+
+          <div class="tpl-card2" data-tpl="blush" onclick="setTemplate('blush',this)">
+            <div class="tpl-thumb" style="background:linear-gradient(135deg,#fff5f5,#ffe4e6);">
+              <div style="height:5px;background:#e11d48;border-radius:2px;width:35%;margin-bottom:5px;"></div>
+              <div style="height:9px;background:#4c0519;border-radius:2px;width:80%;margin-bottom:3px;"></div>
+              <div style="height:9px;background:#4c0519;border-radius:2px;width:55%;margin-bottom:5px;"></div>
+              <div style="height:3px;background:#881337;border-radius:1px;width:90%;margin-bottom:2px;opacity:0.6;"></div>
+              <div style="height:3px;background:#881337;border-radius:1px;width:70%;opacity:0.6;"></div>
+            </div>
+            <div class="tpl-info"><span class="tpl-title2">Blush</span><span class="tpl-hint">Soft rose</span></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- LinkedIn group -->
+      <div class="tpl-group">
+        <div class="tpl-group-header">
+          <span class="tpl-group-icon" style="color:#0a66c2;">◈</span>
+          <span class="tpl-group-label">LinkedIn Post</span>
+          <span class="tpl-group-desc">Square · image download</span>
+        </div>
+        <div class="tpl-row">
+
+          <div class="tpl-card2" data-tpl="li-pulse" onclick="setTemplate('li-pulse',this)">
+            <div class="tpl-thumb" style="background:#fff;aspect-ratio:1/1;border-bottom:2px solid #0a66c2;">
+              <div style="height:5px;background:#dbeafe;border-radius:100px;width:38%;margin-bottom:6px;"></div>
+              <div style="height:8px;background:#0f172a;border-radius:2px;width:85%;margin-bottom:3px;"></div>
+              <div style="height:8px;background:#0f172a;border-radius:2px;width:60%;margin-bottom:6px;"></div>
+              <div style="height:2px;background:#e2e8f0;border-radius:1px;width:100%;margin-bottom:2px;"></div>
+              <div style="height:3px;background:#cbd5e1;border-radius:1px;width:90%;margin-bottom:2px;"></div>
+              <div style="height:3px;background:#cbd5e1;border-radius:1px;width:75%;"></div>
+            </div>
+            <div class="tpl-info"><span class="tpl-title2">Pulse</span><span class="tpl-hint">Clean white</span></div>
+          </div>
+
+          <div class="tpl-card2" data-tpl="li-navy" onclick="setTemplate('li-navy',this)">
+            <div class="tpl-thumb" style="background:#0f2b4d;aspect-ratio:1/1;">
+              <div style="height:5px;background:rgba(147,197,253,0.3);border-radius:100px;width:38%;margin-bottom:6px;"></div>
+              <div style="height:8px;background:#f0f9ff;border-radius:2px;width:85%;margin-bottom:3px;"></div>
+              <div style="height:8px;background:#f0f9ff;border-radius:2px;width:60%;margin-bottom:6px;"></div>
+              <div style="height:3px;background:#1e4d8c;border-radius:1px;width:90%;margin-bottom:2px;"></div>
+              <div style="height:3px;background:#1e4d8c;border-radius:1px;width:70%;"></div>
+            </div>
+            <div class="tpl-info"><span class="tpl-title2">Navy</span><span class="tpl-hint">Dark authority</span></div>
+          </div>
+
+          <div class="tpl-card2" data-tpl="li-gold" onclick="setTemplate('li-gold',this)">
+            <div class="tpl-thumb" style="background:#1c1208;aspect-ratio:1/1;border-bottom:2px solid #d4a853;">
+              <div style="height:5px;background:rgba(212,168,83,0.3);border-radius:100px;width:38%;margin-bottom:6px;"></div>
+              <div style="height:9px;background:#fef3c7;border-radius:2px;width:85%;margin-bottom:3px;"></div>
+              <div style="height:9px;background:#fef3c7;border-radius:2px;width:60%;margin-bottom:6px;"></div>
+              <div style="height:3px;background:#78350f;border-radius:1px;width:90%;margin-bottom:2px;"></div>
+              <div style="height:3px;background:#78350f;border-radius:1px;width:70%;"></div>
+            </div>
+            <div class="tpl-info"><span class="tpl-title2">Gold</span><span class="tpl-hint">Warm premium</span></div>
+          </div>
+
+          <div class="tpl-card2" data-tpl="li-coral" onclick="setTemplate('li-coral',this)">
+            <div class="tpl-thumb" style="background:linear-gradient(160deg,#ff6b35,#ff9a6c);aspect-ratio:1/1;">
+              <div style="height:5px;background:rgba(255,255,255,0.3);border-radius:100px;width:38%;margin-bottom:6px;"></div>
+              <div style="height:8px;background:#fff;border-radius:2px;width:85%;margin-bottom:3px;opacity:0.9;"></div>
+              <div style="height:8px;background:#fff;border-radius:2px;width:60%;margin-bottom:6px;opacity:0.9;"></div>
+              <div style="height:3px;background:rgba(255,255,255,0.4);border-radius:1px;width:90%;margin-bottom:2px;"></div>
+              <div style="height:3px;background:rgba(255,255,255,0.4);border-radius:1px;width:70%;"></div>
+            </div>
+            <div class="tpl-info"><span class="tpl-title2">Coral</span><span class="tpl-hint">Bold vibrant</span></div>
+          </div>
+
+          <!-- Code Post — featured card with badge -->
+          <div class="tpl-card2 tpl-code-featured" data-tpl="li-code" onclick="setTemplate('li-code',this)">
+            <div class="tpl-badge-code">{ } includes code</div>
+            <div class="tpl-thumb" style="background:#0f172a;aspect-ratio:1/1;padding:0;">
+              <!-- Mini window chrome -->
+              <div style="background:#1e293b;padding:4px 6px 3px;display:flex;align-items:center;gap:3px;border-bottom:1px solid #0f172a;">
+                <div style="width:5px;height:5px;border-radius:50%;background:#ff5f57;flex-shrink:0;"></div>
+                <div style="width:5px;height:5px;border-radius:50%;background:#febc2e;flex-shrink:0;"></div>
+                <div style="width:5px;height:5px;border-radius:50%;background:#28c840;flex-shrink:0;"></div>
+              </div>
+              <div style="padding:5px 6px;">
+                <div style="height:3px;background:#7dd3fc;border-radius:1px;width:80%;margin-bottom:2px;"></div>
+                <div style="height:3px;background:#6ee7b7;border-radius:1px;width:65%;margin-bottom:2px;"></div>
+                <div style="height:3px;background:#c4b5fd;border-radius:1px;width:55%;margin-bottom:2px;"></div>
+                <div style="height:3px;background:#7dd3fc;border-radius:1px;width:45%;margin-bottom:4px;"></div>
+                <div style="height:2px;background:#334155;border-radius:1px;width:90%;margin-bottom:2px;"></div>
+                <div style="height:2px;background:#334155;border-radius:1px;width:70%;"></div>
+              </div>
+            </div>
+            <div class="tpl-info"><span class="tpl-title2">Code Post</span><span class="tpl-hint">Hook + snippet + tips</span></div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Form fields -->
+    <div class="fields">
+
+      <div class="field">
+        <label>Title</label>
+        <input id="f-title" placeholder="What is the sound of loving writing?" oninput="sync()" />
+      </div>
+
+      <div class="field" id="field-subtitle">
+        <label>Subtitle <span>— shown under title</span></label>
+        <input id="f-subtitle" placeholder="It may sound strange to say it, but I know the answer." oninput="sync()" />
+      </div>
+
+      <div class="field">
+        <label>Category</label>
+        <div class="cat-row" id="cat-row">
+          <span class="cat active" onclick="setCat(this)">.NET</span>
+          <span class="cat" onclick="setCat(this)">Azure</span>
+          <span class="cat" onclick="setCat(this)">Architecture</span>
+          <span class="cat" onclick="setCat(this)">C#</span>
+          <span class="cat" onclick="setCat(this)">DevOps</span>
+          <span class="cat" onclick="setCat(this)">SQL</span>
+          <span class="cat" onclick="setCat(this)">Performance</span>
+        </div>
+        <input id="f-cat-custom" placeholder="or type custom…" oninput="syncCat()" style="margin-top:5px;" />
+      </div>
+
+      <div class="field" id="field-date">
+        <label>Date</label>
+        <input id="f-date" value="May 2026" oninput="sync()" />
+      </div>
+
+      <div class="field" id="field-rt">
+        <label>Read time</label>
+        <input id="f-readtime" value="5 min read" oninput="sync()" />
+      </div>
+
+      <div class="field" style="flex:1;">
+        <label>Content <span>— plain text, ## for headings</span></label>
+        <textarea id="f-body" oninput="sync(); updateCount()" placeholder="Write your post here…
+
+## Section heading
+Your paragraph text."></textarea>
+        <div class="char-count" id="char-count">0 words</div>
+      </div>
+
+      <!-- ── CODE BLOCK (all templates) ── -->
+      <div class="field addon-field" id="field-addon-code">
+        <div class="addon-header" onclick="toggleAddon('code')">
+          <div class="addon-left">
+            <div class="addon-icon" style="background:#0f172a;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7dd3fc" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+            <div>
+              <div class="addon-title">Add Code Snippet</div>
+              <div class="addon-sub">Renders as a syntax-highlighted window in the post</div>
+            </div>
+          </div>
+          <div class="addon-toggle" id="toggle-code">
+            <div class="addon-switch" id="switch-code"></div>
+          </div>
+        </div>
+        <div class="addon-body" id="body-code" style="display:none;">
+          <div class="addon-inner">
+            <div style="display:flex;gap:8px;margin-bottom:8px;">
+              <div style="flex:1;">
+                <div class="inner-label">Language</div>
+                <select id="f-inline-lang" onchange="sync()" style="width:100%;font-size:0.8rem;padding:6px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);outline:none;">
+                  <option value="csharp">C#</option>
+                  <option value="javascript">JavaScript</option>
+                  <option value="typescript">TypeScript</option>
+                  <option value="python">Python</option>
+                  <option value="sql">SQL</option>
+                  <option value="bash">Bash</option>
+                  <option value="json">JSON</option>
+                  <option value="yaml">YAML</option>
+                </select>
+              </div>
+              <div style="flex:1;">
+                <div class="inner-label">File label</div>
+                <input id="f-inline-file" placeholder="Program.cs" oninput="sync()" style="width:100%;font-size:0.8rem;padding:6px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);outline:none;" />
+              </div>
+            </div>
+            <div class="inner-label">Code</div>
+            <textarea id="f-inline-code" oninput="sync()" placeholder="Paste your code here…" style="width:100%;min-height:130px;font-family:'JetBrains Mono',monospace;font-size:0.75rem;line-height:1.6;padding:8px;border:1px solid var(--border);border-radius:6px;background:#0f172a;color:#e2e8f0;outline:none;resize:vertical;"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── COMPARE BLOCK (✅ vs ❌) ── -->
+      <div class="field addon-field" id="field-addon-compare">
+        <div class="addon-header" onclick="toggleAddon('compare')">
+          <div class="addon-left">
+            <div class="addon-icon" style="background:linear-gradient(135deg,#16a34a,#dc2626);">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="12" y1="2" x2="12" y2="22"/><polyline points="5 9 2 12 5 15"/><polyline points="19 9 22 12 19 15"/></svg>
+            </div>
+            <div>
+              <div class="addon-title">Add Code Comparison</div>
+              <div class="addon-sub">Side-by-side ✅ Good vs ❌ Bad comparison</div>
+            </div>
+          </div>
+          <div class="addon-toggle" id="toggle-compare">
+            <div class="addon-switch" id="switch-compare"></div>
+          </div>
+        </div>
+        <div class="addon-body" id="body-compare" style="display:none;">
+          <div class="addon-inner">
+            <div style="display:flex;gap:6px;margin-bottom:8px;">
+              <div style="flex:1;">
+                <div class="inner-label">Language</div>
+                <select id="f-cmp-lang" onchange="sync()" style="width:100%;font-size:0.8rem;padding:6px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);outline:none;">
+                  <option value="csharp">C#</option>
+                  <option value="javascript">JavaScript</option>
+                  <option value="typescript">TypeScript</option>
+                  <option value="python">Python</option>
+                  <option value="sql">SQL</option>
+                  <option value="bash">Bash</option>
+                </select>
+              </div>
+              <div style="flex:1.5;">
+                <div class="inner-label">Compare label</div>
+                <input id="f-cmp-label" placeholder="e.g. Caching pattern" oninput="sync()" style="width:100%;font-size:0.8rem;padding:6px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);outline:none;" />
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+              <div>
+                <div class="inner-label good-label">✅ Good way</div>
+                <textarea id="f-cmp-good" oninput="sync()" placeholder="// correct approach" style="width:100%;min-height:110px;font-family:'JetBrains Mono',monospace;font-size:0.72rem;line-height:1.55;padding:7px;border:1.5px solid #16a34a;border-radius:6px;background:#0f172a;color:#e2e8f0;outline:none;resize:vertical;"></textarea>
+              </div>
+              <div>
+                <div class="inner-label bad-label">❌ Bad way</div>
+                <textarea id="f-cmp-bad" oninput="sync()" placeholder="// what to avoid" style="width:100%;min-height:110px;font-family:'JetBrains Mono',monospace;font-size:0.72rem;line-height:1.55;padding:7px;border:1.5px solid #dc2626;border-radius:6px;background:#0f172a;color:#e2e8f0;outline:none;resize:vertical;"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Author name</label>
+        <input id="f-author" value="Shahnaz Kulsoom" oninput="sync()" />
+      </div>
+
+      <!-- Code Post fields — shown only for li-code template -->
+      <div class="field" id="field-code-lang" style="display:none;">
+        <label>Language</label>
+        <select id="f-code-lang" onchange="sync()">
+          <option value="csharp">C#</option>
+          <option value="javascript">JavaScript</option>
+          <option value="typescript">TypeScript</option>
+          <option value="python">Python</option>
+          <option value="sql">SQL</option>
+          <option value="bash">Bash</option>
+          <option value="json">JSON</option>
+          <option value="yaml">YAML</option>
+        </select>
+      </div>
+
+      <div class="field" id="field-code-snippet" style="display:none;flex:1;">
+        <label>Code snippet</label>
+        <textarea id="f-code-snippet" oninput="sync()" style="min-height:160px;font-family:'JetBrains Mono',monospace;font-size:0.78rem;line-height:1.6;" placeholder="public async Task&lt;Product&gt; GetProductAsync(int id)
+{
+    var cached = await _cache.GetStringAsync($&quot;product:{id}&quot;);
+    if (cached is not null)
+        return JsonSerializer.Deserialize&lt;Product&gt;(cached)!;
+
+    var product = await _repo.GetByIdAsync(id);
+    await _cache.SetStringAsync($&quot;product:{id}&quot;,
+        JsonSerializer.Serialize(product));
+    return product;
+}"></textarea>
+      </div>
+
+      <div class="field" id="field-code-takeaway" style="display:none;">
+        <label>Key takeaways <span>— one per line, shown as → bullets</span></label>
+        <textarea id="f-code-takeaway" oninput="sync()" style="min-height:90px;font-size:0.83rem;line-height:1.6;" placeholder="Cache-aside pattern prevents DB overload
+Serialize once, reuse across requests
+Add sliding expiry for session data"></textarea>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RIGHT: PREVIEW -->
+  <div class="right-panel">
+    <div class="preview-label" id="preview-hint">Live preview — 680px wide</div>
+    <div class="canvas-wrap" id="canvas-wrap">
+      <div id="preview-card" class="tpl-sky">
+        <div id="pc-hero">
+          <div id="pc-cat">.NET</div>
+          <div id="pc-title">Your post title goes here</div>
+          <div id="pc-subtitle">A short subtitle that gives readers context about what they're about to read.</div>
+          <div id="pc-meta"><span>May 2026</span> · 5 min read</div>
+        </div>
+        <div id="pc-body">
+          <p>Start typing in the content field on the left and your post will appear here in real time.</p>
+          <p>Use <strong>## Heading</strong> at the start of a line to create section headings.</p>
+        </div>
+        <div id="pc-footer">
+          <span>By <strong>Shahnaz Kulsoom</strong></span>
+          <span>shahnaz-kulsoom.dev/blog</span>
+        </div>
+      </div>
+    </div>
+    <!-- Fit indicator -->
+    <div class="fit-bar-wrap" id="fit-bar-wrap" style="display:none;">
+      <span class="fit-label" id="fit-label">Content fit</span>
+      <div class="fit-bar"><div class="fit-fill" id="fit-fill" style="width:0%"></div></div>
+      <span class="fit-pct" id="fit-pct">0%</span>
+    </div>
+    <div class="fit-tip" id="fit-tip">⚠ Content overflows the card — shorten your text or it will be clipped in the image</div>
+  </div>
+</div><!-- end post-panel -->
+
+<!-- ══════════════════════════════════════
+     CODE CARD PANEL
+══════════════════════════════════════ -->
+<div id="code-panel" class="code-panel">
+
+  <!-- CODE LEFT SIDEBAR -->
+  <div class="code-sidebar">
+
+    <div class="code-field">
+      <label>Language</label>
+      <select id="c-lang" onchange="syncCode()">
+        <option value="csharp">C#</option>
+        <option value="javascript">JavaScript</option>
+        <option value="typescript">TypeScript</option>
+        <option value="python">Python</option>
+        <option value="sql">SQL</option>
+        <option value="bash">Bash / Shell</option>
+        <option value="json">JSON</option>
+        <option value="xml">XML</option>
+        <option value="html">HTML</option>
+        <option value="css">CSS</option>
+        <option value="dockerfile">Dockerfile</option>
+        <option value="yaml">YAML</option>
+      </select>
+    </div>
+
+    <div class="code-field">
+      <label>Title <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:0.65rem;">— shown in window bar</span></label>
+      <input id="c-title" placeholder="Program.cs" oninput="syncCode()" />
+    </div>
+
+    <div class="code-field">
+      <label>Caption <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:0.65rem;">— below the card</span></label>
+      <input id="c-caption" placeholder="Redis cache-aside pattern in .NET 8" oninput="syncCode()" />
+    </div>
+
+    <div class="code-field">
+      <label>Author tag</label>
+      <input id="c-author" value="@shahnaz_kulsoom" oninput="syncCode()" />
+    </div>
+
+    <div class="code-field">
+      <label>Code</label>
+      <textarea id="code-input" oninput="syncCode()" placeholder="Paste your code here…
+
+public async Task&lt;Product&gt; GetProductAsync(int id)
+{
+    var cached = await _cache.GetStringAsync($&quot;product:{id}&quot;);
+    if (cached != null)
+        return JsonSerializer.Deserialize&lt;Product&gt;(cached)!;
+
+    var product = await _repo.GetByIdAsync(id);
+    await _cache.SetStringAsync(
+        $&quot;product:{id}&quot;,
+        JsonSerializer.Serialize(product),
+        new DistributedCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+        });
+    return product;
+}"></textarea>
+    </div>
+
+    <div class="code-field">
+      <label>Font size</label>
+      <div class="slider-row">
+        <input type="range" min="11" max="20" value="13" id="c-fontsize" oninput="syncCode(); document.getElementById('c-fontsize-val').textContent=this.value+'px'" />
+        <span class="slider-val" id="c-fontsize-val">13px</span>
+      </div>
+    </div>
+
+    <div class="code-field">
+      <label>Code theme</label>
+      <div class="theme-grid" id="theme-grid">
+        <div class="theme-swatch active" data-theme="night-owl" style="background:#011627;color:#d6deeb;" onclick="setCodeTheme('night-owl',this)">Night Owl</div>
+        <div class="theme-swatch" data-theme="dracula" style="background:#282a36;color:#f8f8f2;" onclick="setCodeTheme('dracula',this)">Dracula</div>
+        <div class="theme-swatch" data-theme="github-dark" style="background:#0d1117;color:#c9d1d9;" onclick="setCodeTheme('github-dark',this)">GH Dark</div>
+        <div class="theme-swatch" data-theme="monokai" style="background:#272822;color:#f8f8f2;" onclick="setCodeTheme('monokai',this)">Monokai</div>
+        <div class="theme-swatch" data-theme="solarized-dark" style="background:#002b36;color:#839496;" onclick="setCodeTheme('solarized-dark',this)">Solarized</div>
+        <div class="theme-swatch" data-theme="one-dark" style="background:#282c34;color:#abb2bf;" onclick="setCodeTheme('one-dark',this)">One Dark</div>
+        <div class="theme-swatch" data-theme="github" style="background:#ffffff;color:#24292e;border:1px solid #e1e4e8;" onclick="setCodeTheme('github',this)">GitHub</div>
+        <div class="theme-swatch" data-theme="ayu-light" style="background:#fafafa;color:#575f66;border:1px solid #e8e8e8;" onclick="setCodeTheme('ayu-light',this)">Ayu Light</div>
+      </div>
+    </div>
+
+    <div class="code-field">
+      <label>Background</label>
+      <div class="bg-grid" id="bg-grid">
+        <div class="bg-swatch active" data-bg="linear-gradient(135deg,#667eea,#764ba2)" style="background:linear-gradient(135deg,#667eea,#764ba2);" onclick="setCodeBg(this)"></div>
+        <div class="bg-swatch" data-bg="linear-gradient(135deg,#0ea5e9,#818cf8)" style="background:linear-gradient(135deg,#0ea5e9,#818cf8);" onclick="setCodeBg(this)"></div>
+        <div class="bg-swatch" data-bg="linear-gradient(135deg,#f093fb,#f5576c)" style="background:linear-gradient(135deg,#f093fb,#f5576c);" onclick="setCodeBg(this)"></div>
+        <div class="bg-swatch" data-bg="linear-gradient(135deg,#4facfe,#00f2fe)" style="background:linear-gradient(135deg,#4facfe,#00f2fe);" onclick="setCodeBg(this)"></div>
+        <div class="bg-swatch" data-bg="linear-gradient(135deg,#43e97b,#38f9d7)" style="background:linear-gradient(135deg,#43e97b,#38f9d7);" onclick="setCodeBg(this)"></div>
+        <div class="bg-swatch" data-bg="linear-gradient(135deg,#fa709a,#fee140)" style="background:linear-gradient(135deg,#fa709a,#fee140);" onclick="setCodeBg(this)"></div>
+        <div class="bg-swatch" data-bg="linear-gradient(135deg,#ff6b35,#f7c59f)" style="background:linear-gradient(135deg,#ff6b35,#f7c59f);" onclick="setCodeBg(this)"></div>
+        <div class="bg-swatch" data-bg="linear-gradient(135deg,#0f172a,#1e293b)" style="background:linear-gradient(135deg,#0f172a,#1e293b);" onclick="setCodeBg(this)"></div>
+        <div class="bg-swatch" data-bg="linear-gradient(135deg,#d4a853,#92400e)" style="background:linear-gradient(135deg,#d4a853,#92400e);" onclick="setCodeBg(this)"></div>
+        <div class="bg-swatch" data-bg="#f1f5f9" style="background:#f1f5f9;border:1px solid #e2e8f0;" onclick="setCodeBg(this)"></div>
+        <div class="bg-swatch" data-bg="linear-gradient(135deg,#1a1a2e,#a78bfa)" style="background:linear-gradient(135deg,#1a1a2e,#a78bfa);" onclick="setCodeBg(this)"></div>
+        <div class="bg-swatch" data-bg="linear-gradient(135deg,#134e5e,#71b280)" style="background:linear-gradient(135deg,#134e5e,#71b280);" onclick="setCodeBg(this)"></div>
+      </div>
+    </div>
+
+    <div class="code-field" style="padding-bottom:1.25rem;">
+      <button class="btn btn-outline" onclick="downloadCodeImage()" style="width:100%;padding:10px;font-size:0.85rem;">⬇ Download Card as Image</button>
+    </div>
+
+  </div>
+
+  <!-- CODE RIGHT: PREVIEW -->
+  <div class="code-preview-panel">
+    <div style="font-size:0.72rem;font-weight:600;color:#6b7280;letter-spacing:0.08em;text-transform:uppercase;align-self:flex-start;">Live preview</div>
+    <div id="code-card">
+      <div id="code-card-bg" style="background:linear-gradient(135deg,#667eea,#764ba2);padding:2.5rem;">
+        <div id="code-window">
+          <div class="window-bar" id="code-window-bar" style="background:#1e1e1e;">
+            <div class="win-dot" style="background:#ff5f57;"></div>
+            <div class="win-dot" style="background:#febc2e;"></div>
+            <div class="win-dot" style="background:#28c840;"></div>
+            <div class="win-title" id="code-win-title" style="color:#ccc;">Program.cs</div>
+          </div>
+          <pre id="code-display" class="hljs" style="background:#011627;margin:0;padding:1.5rem;"><code id="code-highlighted" class="language-csharp">// Paste your code on the left →</code></pre>
+        </div>
+        <div id="code-caption-area" style="padding-top:0.85rem;">
+          <div id="code-caption-el" style="color:#fff;font-size:0.85rem;font-weight:500;"></div>
+          <div id="code-author-el" style="color:rgba(255,255,255,0.6);font-size:0.72rem;margin-top:3px;">@shahnaz_kulsoom</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end code-panel -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let currentTpl = 'sky';
+  let currentCat = '.NET';
+  const LI_TPLS = ['li-pulse','li-navy','li-gold','li-coral','li-code'];
+
+  // ── TEMPLATE ──────────────────────────────────────────
+  function setTemplate(name, el) {
+    document.querySelectorAll('.tpl-card2').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    const card = document.getElementById('preview-card');
+    card.className = 'tpl-' + name + (LI_TPLS.includes(name) ? ' li-mode' : '');
+    currentTpl = name;
+    const isLI     = LI_TPLS.includes(name);
+    const isCode   = name === 'li-code';
+    // Blog-only fields
+    document.getElementById('field-subtitle').style.display = isLI ? 'none' : '';
+    document.getElementById('field-date').style.display     = isLI ? 'none' : '';
+    document.getElementById('field-rt').style.display       = isLI ? 'none' : '';
+    // Content field — hide for code post (has its own code fields)
+    document.getElementById('f-body').closest('.field').style.display = isCode ? 'none' : '';
+    // Code-post-only fields
+    document.getElementById('field-code-lang').style.display     = isCode ? '' : 'none';
+    document.getElementById('field-code-snippet').style.display  = isCode ? '' : 'none';
+    document.getElementById('field-code-takeaway').style.display = isCode ? '' : 'none';
+    // Hint text
+    document.getElementById('preview-hint').textContent = isCode ? 'Live preview — Code Post (LinkedIn)' : isLI ? 'Live preview — 560×560px (LinkedIn)' : 'Live preview — 680px wide';
+    sync();
+  }
+
+  // ── CATEGORY ──────────────────────────────────────────
+  function setCat(el) {
+    document.querySelectorAll('.cat').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    currentCat = el.textContent;
+    document.getElementById('f-cat-custom').value = '';
+    sync();
+  }
+  function syncCat() {
+    const v = document.getElementById('f-cat-custom').value.trim();
+    if (v) {
+      document.querySelectorAll('.cat').forEach(c => c.classList.remove('active'));
+      currentCat = v;
+    }
+    sync();
+  }
+
+  // ── ADDON TOGGLES ─────────────────────────────────────
+  const addonState = { code: false, compare: false };
+  function toggleAddon(id) {
+    addonState[id] = !addonState[id];
+    const body   = document.getElementById('body-' + id);
+    const toggle = document.getElementById('toggle-' + id);
+    body.style.display   = addonState[id] ? '' : 'none';
+    toggle.classList.toggle('on', addonState[id]);
+    sync();
+  }
+
+  // ── SYNC FORM → PREVIEW ───────────────────────────────
+  function sync() {
+    const title    = document.getElementById('f-title').value.trim()    || 'Your post title goes here';
+    const subtitle = document.getElementById('f-subtitle').value.trim() || 'A short subtitle that gives readers context.';
+    const date     = document.getElementById('f-date').value.trim()     || 'May 2026';
+    const readtime = document.getElementById('f-readtime').value.trim() || '5 min read';
+    const body     = document.getElementById('f-body').value.trim();
+    const author   = document.getElementById('f-author').value.trim()   || 'Shahnaz Kulsoom';
+
+    document.getElementById('pc-cat').textContent      = currentCat;
+    document.getElementById('pc-title').textContent    = title;
+    document.getElementById('pc-subtitle').textContent = subtitle;
+    document.getElementById('pc-meta').innerHTML       = `<span>${date}</span> · ${readtime}`;
+
+    const isLI = LI_TPLS.includes(currentTpl);
+    const handle = '@' + author.toLowerCase().replace(/\s+/g, '');
+    const svgBookmark = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>`;
+    const svgHeart    = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+    const svgShare    = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>`;
+
+    if (isLI) {
+      document.getElementById('pc-footer').innerHTML = `
+        <div class="li-author">
+          <div class="li-name">${author}</div>
+          <div class="li-handle">${handle}</div>
+        </div>
+        <div class="li-actions">
+          ${svgBookmark}${svgHeart}${svgShare}
+        </div>`;
+    } else {
+      document.getElementById('pc-footer').innerHTML = `<span>By <strong>${author}</strong></span><span>shahnaz-kulsoom.dev/blog</span>`;
+    }
+
+    // Parse body: ## lines → h2, blank-line-separated → p
+    const bodyEl = document.getElementById('pc-body');
+
+    // ── li-code special render ──
+    if (currentTpl === 'li-code') {
+      const snippet   = document.getElementById('f-code-snippet').value || '// paste your code on the left →';
+      const lang      = document.getElementById('f-code-lang').value || 'csharp';
+      const takeaways = document.getElementById('f-code-takeaway').value
+        .split('\n').map(l => l.trim()).filter(Boolean);
+      const langLabel = { csharp:'Program.cs', javascript:'index.js', typescript:'types.ts', python:'main.py', sql:'query.sql', bash:'script.sh', json:'config.json', yaml:'config.yml' }[lang] || lang;
+      const takeawayHTML = takeaways.map(t => `<div class="li-takeaway-item">${t}</div>`).join('');
+      bodyEl.innerHTML = `
+        <div class="li-code-window">
+          <div class="li-code-winbar">
+            <div class="li-code-dot" style="background:#ff5f57;"></div>
+            <div class="li-code-dot" style="background:#febc2e;"></div>
+            <div class="li-code-dot" style="background:#28c840;"></div>
+            <div class="li-code-filetag">${langLabel}</div>
+          </div>
+          <pre><code>${snippet.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</code></pre>
+        </div>
+        ${takeaways.length ? `<div class="li-takeaway">${takeawayHTML}</div>` : ''}`;
+      return;
+    }
+    if (!body) {
+      bodyEl.innerHTML = '<p>Start typing in the content field and your post will appear here.</p>';
+    } else {
+    const lines = body.split('\n');
+    let html = '';
+    let para = [];
+    for (const line of lines) {
+      if (line.startsWith('## ')) {
+        if (para.length) { html += '<p>' + para.join(' ') + '</p>'; para = []; }
+        html += '<h2>' + line.slice(3) + '</h2>';
+      } else if (line.trim() === '') {
+        if (para.length) { html += '<p>' + para.join(' ') + '</p>'; para = []; }
+      } else {
+        para.push(line.trim());
+      }
+    }
+    if (para.length) html += '<p>' + para.join(' ') + '</p>';
+    bodyEl.innerHTML = html || '<p>' + body + '</p>';
+    }
+
+    // ── Append inline code block ──
+    if (addonState.code) {
+      const code  = document.getElementById('f-inline-code').value || '// your code here';
+      const file  = document.getElementById('f-inline-file').value || 'snippet';
+      const esc   = code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      const block = document.createElement('div');
+      block.className = 'pc-code-block';
+      block.innerHTML = `
+        <div class="pc-code-bar">
+          <div class="pc-code-dot" style="background:#ff5f57;"></div>
+          <div class="pc-code-dot" style="background:#febc2e;"></div>
+          <div class="pc-code-dot" style="background:#28c840;"></div>
+          <div class="pc-code-file">${file}</div>
+        </div>
+        <pre class="pc-code-pre">${esc}</pre>`;
+      bodyEl.appendChild(block);
+    }
+
+    // ── Append compare block ──
+    if (addonState.compare) {
+      const good  = document.getElementById('f-cmp-good').value || '// good way';
+      const bad   = document.getElementById('f-cmp-bad').value  || '// bad way';
+      const lbl   = document.getElementById('f-cmp-label').value || 'Code Comparison';
+      const escG  = good.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      const escB  = bad.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      const block = document.createElement('div');
+      block.className = 'pc-compare-block';
+      block.innerHTML = `
+        <div class="pc-compare-label">${lbl}</div>
+        <div class="pc-compare-grid">
+          <div class="pc-cmp-panel">
+            <div class="pc-cmp-bar good">✅ Good way</div>
+            <pre class="pc-cmp-pre">${escG}</pre>
+          </div>
+          <div class="pc-cmp-panel">
+            <div class="pc-cmp-bar bad">❌ Bad way</div>
+            <pre class="pc-cmp-pre">${escB}</pre>
+          </div>
+        </div>`;
+      bodyEl.appendChild(block);
+    }
+
+    // ── Update fit indicator for LinkedIn cards ──
+    const fitWrap = document.getElementById('fit-bar-wrap');
+    const fitTip  = document.getElementById('fit-tip');
+    if (isLI) {
+      fitWrap.style.display = '';
+      const card = document.getElementById('preview-card');
+      const used = card.scrollHeight;
+      const avail = 560;
+      const pct = Math.min(Math.round((used / avail) * 100), 100);
+      const fill = document.getElementById('fit-fill');
+      const pctEl = document.getElementById('fit-pct');
+      fill.style.width = pct + '%';
+      fill.className = 'fit-fill' + (pct > 95 ? ' over' : pct > 80 ? ' warn' : '');
+      pctEl.textContent = pct + '%';
+      document.getElementById('fit-label').textContent = pct >= 100 ? 'Overflowing' : 'Content fit';
+      fitTip.classList.toggle('show', used > avail);
+    } else {
+      fitWrap.style.display = 'none';
+      fitTip.classList.remove('show');
+    }
+  }
+
+  function updateCount() {
+    const words = document.getElementById('f-body').value.trim().split(/\s+/).filter(Boolean).length;
+    document.getElementById('char-count').textContent = words + ' words';
+  }
+
+  // ── RESET ─────────────────────────────────────────────
+  // ── EXPORT POST FILE (.js for blog + metadata for posts.js) ─
+  function exportPostFile() {
+    const title    = document.getElementById('f-title').value.trim()    || 'Untitled Post';
+    const subtitle = document.getElementById('f-subtitle').value.trim() || '';
+    const excerpt  = document.getElementById('f-excerpt').value.trim()  || subtitle;
+    const date     = document.getElementById('f-date').value.trim()     || 'May 2026';
+    const readTime = document.getElementById('f-readtime').value.trim() || '5 min read';
+    const author   = document.getElementById('f-author').value.trim()   || 'Shahnaz Kulsoom';
+    const cat      = activeCategory;
+    const slug     = makeSlug(title);
+
+    // Build the HTML body from the current rendered preview
+    const bodyHTML = document.getElementById('pc-body').innerHTML
+      .replace(/`/g, '\\`').replace(/\${/g, '\\${');
+
+    // 1. The post content JS file (drop into posts/ folder)
+    const postFileContent =
+`// posts/${slug}.js
+// Generated by composer.html on ${new Date().toLocaleDateString()}
+// Drop this file into your blog/posts/ folder.
+
+window.POST_BODY = \`
+${bodyHTML}
+\`;
+`;
+
+    // 2. The metadata snippet (paste one line into posts.js POSTS_INDEX)
+    const metaSnippet =
+`  {
+    slug:     "${slug}",
+    title:    "${title.replace(/"/g, '\\"')}",
+    category: "${cat}",
+    date:     "${date}",
+    readTime: "${readTime}",
+    excerpt:  "${excerpt.replace(/"/g, '\\"')}",
+    subtitle: "${subtitle.replace(/"/g, '\\"')}"
+  },`;
+
+    // Download the .js file
+    saveDataURL(
+      'data:text/javascript;charset=utf-8,' + encodeURIComponent(postFileContent),
+      slug + '.js'
+    );
+
+    // Copy the metadata snippet to clipboard
+    navigator.clipboard.writeText(metaSnippet).then(() => {
+      toast(`✓ "${slug}.js" downloaded — paste into blog/posts/\n✓ Metadata copied — paste into POSTS_INDEX in posts.js`);
+    }).catch(() => {
+      toast(`✓ "${slug}.js" downloaded — drop it in blog/posts/\n  Also add metadata to posts.js manually.`);
+    });
+  }
+
+  function resetForm() {
+    ['f-title','f-subtitle','f-body','f-cat-custom'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('f-date').value = 'May 2026';
+    document.getElementById('f-readtime').value = '5 min read';
+    document.getElementById('f-author').value = 'Shahnaz Kulsoom';
+    document.querySelectorAll('.cat').forEach((c,i) => c.classList.toggle('active', i===0));
+    currentCat = '.NET';
+    sync();
+    updateCount();
+  }
+
+  // ── TOAST ─────────────────────────────────────────────
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2800);
+  }
+
+  // ── DOWNLOAD IMAGE ────────────────────────────────────
+  // ── CSP-SAFE DOWNLOAD HELPER ──────────────────────────
+  // Appends a real <a> to <body> so CSP data: URIs are allowed
+  function saveDataURL(dataURL, filename) {
+    const a = document.createElement('a');
+    a.href = dataURL;
+    a.download = filename;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => document.body.removeChild(a), 200);
+  }
+
+  // ── DOWNLOAD POST IMAGE ───────────────────────────────
+  async function downloadImage() {
+    const btn = document.getElementById('img-btn');
+    btn.classList.add('loading');
+    btn.textContent = '…';
+    try {
+      const target = document.getElementById('canvas-wrap');
+      const card   = document.getElementById('preview-card');
+
+      const wrap = document.createElement('div');
+      wrap.style.cssText = `position:fixed;top:0;left:-9999px;z-index:-1;
+        width:${target.offsetWidth}px;background:transparent;pointer-events:none;`;
+      const clone = target.cloneNode(true);
+      clone.style.cssText = `width:${target.offsetWidth}px;border-radius:12px;overflow:hidden;position:relative;`;
+      wrap.appendChild(clone);
+      document.body.appendChild(wrap);
+      await new Promise(r => setTimeout(r, 60));
+
+      const canvas = await html2canvas(clone, {
+        scale: 2, useCORS: true, backgroundColor: null, logging: false,
+        scrollX: 0, scrollY: 0,
+        width: clone.offsetWidth, height: clone.offsetHeight
+      });
+      document.body.removeChild(wrap);
+
+      const slug = (document.getElementById('f-title').value.trim() || 'post')
+        .toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+      saveDataURL(canvas.toDataURL('image/png'), slug + '.png');
+      toast('✓ Image downloaded!');
+    } catch(e) {
+      toast('⚠ Export failed — check console.');
+      console.error(e);
+    } finally {
+      btn.classList.remove('loading');
+      btn.textContent = '⬇ Image';
+    }
+  }
+
+  // ── DOWNLOAD PDF (iframe, no blob: URL) ───────────────
+  const themes = {
+    sky:       { bg:'#fff', heroBg:'linear-gradient(135deg,#f0f9ff,#e0f2fe)', catBg:'#e0f2fe', catColor:'#0369a1', catBorder:'rgba(14,165,233,0.25)', title:'#0f172a', subtitle:'#475569', accent:'#0ea5e9', bodyText:'#475569', h2:'#0f172a', footerBorder:'#e2e8f0', footerText:'#94a3b8', titleFont:"'Raleway',sans-serif" },
+    noir:      { bg:'#0f172a', heroBg:'#0f172a', catBg:'rgba(56,189,248,0.1)', catColor:'#38bdf8', catBorder:'rgba(56,189,248,0.2)', title:'#f1f5f9', subtitle:'#94a3b8', accent:'#38bdf8', bodyText:'#94a3b8', h2:'#e2e8f0', footerBorder:'#1e293b', footerText:'#475569', titleFont:"'Raleway',sans-serif" },
+    serif:     { bg:'#fffdf7', heroBg:'#fffdf7', catBg:'transparent', catColor:'#92400e', catBorder:'none', title:'#1c1208', subtitle:'#78350f', accent:'#d4a853', bodyText:'#44310a', h2:'#1c1208', footerBorder:'#f0d9a0', footerText:'#a16207', titleFont:"'Playfair Display',serif" },
+    mint:      { bg:'#f0fdf4', heroBg:'linear-gradient(135deg,#f0fdf4,#dcfce7)', catBg:'#bbf7d0', catColor:'#14532d', catBorder:'#86efac', title:'#052e16', subtitle:'#166534', accent:'#16a34a', bodyText:'#166534', h2:'#052e16', footerBorder:'#86efac', footerText:'#4ade80', titleFont:"'Raleway',sans-serif" },
+    mono:      { bg:'#1a1a2e', heroBg:'#1a1a2e', catBg:'rgba(167,139,250,0.1)', catColor:'#a78bfa', catBorder:'rgba(167,139,250,0.2)', title:'#e2e8f0', subtitle:'#6b7280', accent:'#a78bfa', bodyText:'#9ca3af', h2:'#a78bfa', footerBorder:'#2d2d44', footerText:'#4b5563', titleFont:"'JetBrains Mono',monospace" },
+    blush:     { bg:'#fff5f5', heroBg:'linear-gradient(135deg,#fff5f5,#ffe4e6)', catBg:'#fecdd3', catColor:'#9f1239', catBorder:'#fda4af', title:'#4c0519', subtitle:'#881337', accent:'#e11d48', bodyText:'#881337', h2:'#4c0519', footerBorder:'#fecdd3', footerText:'#fda4af', titleFont:"'Playfair Display',serif" },
+    'li-pulse':{ bg:'#fff', heroBg:'#fff', catBg:'transparent', catColor:'#0a66c2', catBorder:'none', title:'#0f172a', subtitle:'', accent:'#0a66c2', bodyText:'#334155', h2:'#0a66c2', footerBorder:'#e2e8f0', footerText:'#64748b', titleFont:"'Raleway',sans-serif", liMode:true },
+    'li-navy': { bg:'#0f2b4d', heroBg:'#0f2b4d', catBg:'transparent', catColor:'#60a5fa', catBorder:'none', title:'#f0f9ff', subtitle:'', accent:'#60a5fa', bodyText:'#94a3b8', h2:'#60a5fa', footerBorder:'#1e4d8c', footerText:'#475569', titleFont:"'Raleway',sans-serif", liMode:true },
+    'li-gold': { bg:'#1c1208', heroBg:'linear-gradient(135deg,#1c1208,#2d1f0a)', catBg:'transparent', catColor:'#d4a853', catBorder:'none', title:'#fef3c7', subtitle:'', accent:'#d4a853', bodyText:'#d4a853', h2:'#fef3c7', footerBorder:'#2d1f0a', footerText:'#78350f', titleFont:"'Playfair Display',serif", liMode:true },
+    'li-coral':{ bg:'#fff', heroBg:'linear-gradient(135deg,#ff6b35,#f7c59f)', catBg:'transparent', catColor:'rgba(255,255,255,0.85)', catBorder:'none', title:'#fff', subtitle:'', accent:'#ff6b35', bodyText:'#374151', h2:'#ff6b35', footerBorder:'#f3f4f6', footerText:'#9ca3af', titleFont:"'Raleway',sans-serif", liMode:true },
+    'li-code': { bg:'#0f172a', heroBg:'#0f172a', catBg:'rgba(125,211,252,0.1)', catColor:'#7dd3fc', catBorder:'rgba(125,211,252,0.2)', title:'#f1f5f9', subtitle:'', accent:'#7dd3fc', bodyText:'#94a3b8', h2:'#7dd3fc', footerBorder:'#1e293b', footerText:'#475569', titleFont:"'Raleway',sans-serif", liMode:true, codeMode:true },
+  };
+
+  function downloadPDF() {
+    const title    = document.getElementById('f-title').value.trim()    || 'Post';
+    const subtitle = document.getElementById('f-subtitle').value.trim() || '';
+    const date     = document.getElementById('f-date').value.trim();
+    const readtime = document.getElementById('f-readtime').value.trim();
+    const author   = document.getElementById('f-author').value.trim()   || 'Shahnaz Kulsoom';
+    const body     = document.getElementById('pc-body').innerHTML;
+    const isLI     = LI_TPLS.includes(currentTpl);
+    const t        = themes[currentTpl];
+    const monoFont = currentTpl === 'mono' ? "'JetBrains Mono',monospace" : "'DM Sans',sans-serif";
+    const inBadge  = `<span style="background:${t.accent};color:#fff;border-radius:4px;padding:2px 6px;font-size:0.65rem;font-weight:800;margin-right:6px;">in</span>`;
+
+    const printDoc = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700;800&family=Raleway:wght@700;800&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital,wght@0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:${monoFont};background:${t.bg};color:${t.bodyText};max-width:${isLI?'620px':'780px'};margin:0 auto;${isLI?'aspect-ratio:1/1;display:flex;flex-direction:column;':''}padding:0;}
+.hero{padding:${isLI?'2rem 2.5rem 1.25rem':'3rem 3.5rem 2.5rem'};background:${t.heroBg};border-bottom:${isLI&&currentTpl==='li-pulse'?'3px solid #0a66c2':isLI&&currentTpl==='li-gold'?'2px solid #d4a853':'1px solid '+t.footerBorder};}
+.cat{display:inline-flex;align-items:center;font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:${t.catColor};margin-bottom:0.75rem;}
+h1{font-family:${t.titleFont};font-size:${isLI?'1.7rem':'2.1rem'};font-weight:${currentTpl==='mono'?500:currentTpl==='li-gold'?700:800};line-height:1.2;color:${t.title};margin-bottom:0.65rem;letter-spacing:-0.02em;}
+.subtitle{font-size:1rem;color:${t.subtitle};line-height:1.65;margin-bottom:1rem;font-weight:300;${currentTpl==='serif'||currentTpl==='blush'?'font-style:italic;':''}}
+.meta{font-size:0.75rem;color:${t.footerText};}.meta span{color:${t.accent};}
+.content{padding:${isLI?'1.25rem 2.5rem 1.5rem':'2.5rem 3.5rem 3rem'};${isLI?'flex:1;':''}}
+p{font-size:${isLI?'0.88rem':'0.96rem'};color:${t.bodyText};line-height:1.85;margin-bottom:1rem;font-weight:${isLI?400:300};${currentTpl==='serif'||currentTpl==='blush'?'font-family:Playfair Display,serif;':''}}
+h2{font-family:${t.titleFont};font-size:1rem;font-weight:${currentTpl==='mono'?500:700};color:${t.h2};margin:1.5rem 0 0.6rem;${currentTpl==='serif'?'border-left:3px solid #d4a853;padding-left:0.75rem;':''}}
+.footer{padding:0.9rem ${isLI?'2.5rem':'3.5rem'};border-top:1px solid ${t.footerBorder};display:flex;justify-content:space-between;align-items:center;font-size:0.72rem;color:${t.footerText};${isLI?'margin-top:auto;background:'+t.bg+';':''}}
+.footer strong{color:${t.accent};}
+@media print{body{padding:0;}h2{page-break-after:avoid;}p{page-break-inside:avoid;}}
+</style></head><body>
+<div class="hero">
+  <div class="cat">${isLI?inBadge:''}${currentCat}</div>
+  <h1>${title}</h1>
+  ${!isLI&&subtitle?`<div class="subtitle">${subtitle}</div>`:''}
+  ${!isLI?`<div class="meta"><span>${date}</span> · ${readtime}</div>`:''}
+</div>
+<div class="content">${body}</div>
+<div class="footer"><span>By <strong>${author}</strong></span><span>${isLI?'linkedin.com/in/shahnaz-kulsoom':'shahnaz-kulsoom.dev/blog'}</span></div>
+<script>window.addEventListener('load',()=>{setTimeout(()=>{window.print();},700);});<\/script>
+</body></html>`;
+
+    // Write into a hidden iframe — avoids blob: and popup blockers
+    let iframe = document.getElementById('__pdf_iframe');
+    if (!iframe) {
+      iframe = document.createElement('iframe');
+      iframe.id = '__pdf_iframe';
+      iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:900px;height:700px;border:none;';
+      document.body.appendChild(iframe);
+    }
+    iframe.contentDocument.open();
+    iframe.contentDocument.write(printDoc);
+    iframe.contentDocument.close();
+    toast('Print dialog will open — choose "Save as PDF"');
+  }
+
+  // ── DOWNLOAD CODE CARD IMAGE ──────────────────────────
+  async function downloadCodeImage() {
+    const btn = document.querySelector('.code-sidebar .btn-outline');
+    btn.textContent = '…rendering';
+    btn.disabled = true;
+    try {
+      const card = document.getElementById('code-card');
+      const canvas = await html2canvas(card, {
+        scale: 3, useCORS: true, backgroundColor: null, logging: false, allowTaint: true
+      });
+      const slug = (document.getElementById('c-caption').value.trim() || 'code-card')
+        .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      saveDataURL(canvas.toDataURL('image/png'), slug + '.png');
+      toast('✓ Code card downloaded at 3× resolution!');
+    } catch(e) {
+      toast('⚠ Export failed — check console.');
+      console.error(e);
+    } finally {
+      btn.textContent = '⬇ Download Card as Image';
+      btn.disabled = false;
+    }
+  }
+
+  // ── MODE SWITCHING ────────────────────────────────────
+  let currentMode = 'post'; // 'post' | 'li' | 'code'
+
+  function switchMode(mode) {
+    currentMode = mode;
+    // Update tab styles
+    document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + mode).classList.add('active');
+    // Show/hide panels
+    document.getElementById('post-panel').style.display = (mode === 'post' || mode === 'li') ? '' : 'none';
+    document.getElementById('code-panel').classList.toggle('active', mode === 'code');
+    // PDF button only for post/li
+    document.getElementById('pdf-btn').style.display = mode === 'code' ? 'none' : '';
+    document.getElementById('img-btn').style.display = mode === 'code' ? 'none' : '';
+
+    if (mode === 'li') {
+      // Auto-pick first LinkedIn template if not already on one
+      if (!LI_TPLS.includes(currentTpl)) {
+        const liCard = document.querySelector('[data-tpl="li-pulse"]');
+        setTemplate('li-pulse', liCard);
+      }
+    } else if (mode === 'post') {
+      // Auto-pick first blog template if on a LinkedIn one
+      if (LI_TPLS.includes(currentTpl)) {
+        const skyCard = document.querySelector('[data-tpl="sky"]');
+        setTemplate('sky', skyCard);
+      }
+    }
+  }
+
+  // ── CODE CARD STATE ───────────────────────────────────
+  const CODE_THEMES = {
+    'night-owl':    { bg:'#011627', bar:'#01111d', text:'#d6deeb', accent:'#7fdbca' },
+    'dracula':      { bg:'#282a36', bar:'#1e1f29', text:'#f8f8f2', accent:'#bd93f9' },
+    'github-dark':  { bg:'#0d1117', bar:'#010409', text:'#c9d1d9', accent:'#58a6ff' },
+    'monokai':      { bg:'#272822', bar:'#1a1a16', text:'#f8f8f2', accent:'#a6e22e' },
+    'solarized-dark':{ bg:'#002b36', bar:'#001f27', text:'#839496', accent:'#268bd2' },
+    'one-dark':     { bg:'#282c34', bar:'#21252b', text:'#abb2bf', accent:'#61afef' },
+    'github':       { bg:'#ffffff', bar:'#f6f8fa', text:'#24292e', accent:'#0366d6' },
+    'ayu-light':    { bg:'#fafafa', bar:'#f0f0f0', text:'#575f66', accent:'#ff9940' },
+  };
+
+  // hljs cdn theme map
+  const HLJS_CSS = {
+    'night-owl':    'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/night-owl.min.css',
+    'dracula':      'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/dracula.min.css',
+    'github-dark':  'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css',
+    'monokai':      'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/monokai.min.css',
+    'solarized-dark':'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/solarized-dark.min.css',
+    'one-dark':     'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css',
+    'github':       'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css',
+    'ayu-light':    'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/ayu-light.min.css',
+  };
+
+  let codeTheme = 'night-owl';
+  let codeBg    = 'linear-gradient(135deg,#667eea,#764ba2)';
+
+  // Load highlight.js dynamically
+  const hljsScript = document.createElement('script');
+  hljsScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js';
+  hljsScript.onload = () => syncCode();
+  document.head.appendChild(hljsScript);
+
+  let hljsStyleEl = document.createElement('link');
+  hljsStyleEl.rel = 'stylesheet';
+  hljsStyleEl.href = HLJS_CSS['night-owl'];
+  document.head.appendChild(hljsStyleEl);
+
+  function setCodeTheme(name, el) {
+    document.querySelectorAll('.theme-swatch').forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+    codeTheme = name;
+    // Swap hljs CSS
+    hljsStyleEl.href = HLJS_CSS[name];
+    syncCode();
+  }
+
+  function setCodeBg(el) {
+    document.querySelectorAll('.bg-swatch').forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+    codeBg = el.dataset.bg;
+    syncCode();
+  }
+
+  function syncCode() {
+    const code     = document.getElementById('code-input').value || '// Paste your code on the left →';
+    const lang     = document.getElementById('c-lang').value;
+    const title    = document.getElementById('c-title').value || lang;
+    const caption  = document.getElementById('c-caption').value;
+    const author   = document.getElementById('c-author').value || '@shahnaz_kulsoom';
+    const fontSize = document.getElementById('c-fontsize').value + 'px';
+    const t        = CODE_THEMES[codeTheme];
+
+    // Background
+    document.getElementById('code-card-bg').style.background = codeBg;
+
+    // Window bar
+    const bar = document.getElementById('code-window-bar');
+    bar.style.background = t.bar;
+    document.getElementById('code-win-title').style.color = t.text;
+    document.getElementById('code-win-title').textContent = title;
+
+    // Code display
+    const display = document.getElementById('code-display');
+    display.style.background = t.bg;
+    display.style.fontSize = fontSize;
+
+    const codeEl = document.getElementById('code-highlighted');
+    codeEl.className = 'language-' + lang;
+    codeEl.textContent = code;
+    if (window.hljs) {
+      delete codeEl.dataset.highlighted;
+      hljs.highlightElement(codeEl);
+    }
+
+    // Caption
+    document.getElementById('code-caption-el').textContent = caption;
+    document.getElementById('code-author-el').textContent  = author;
+
+    // Caption text color — light or dark based on bg
+    const isDarkBg = codeBg.includes('#0f172a') || codeBg.includes('#1a1a2e') || codeBg.includes('135deg,#0f') || codeBg.includes('135deg,#1a');
+    const captionColor = (codeBg === '#f1f5f9') ? '#1e293b' : '#ffffff';
+    document.getElementById('code-caption-el').style.color = captionColor;
+    document.getElementById('code-author-el').style.color  = captionColor === '#ffffff' ? 'rgba(255,255,255,0.6)' : 'rgba(30,41,59,0.5)';
+  }
+
+  // ── DOWNLOAD CODE CARD AS IMAGE ───────────────────────
+  async function downloadCodeImage() {
+    const btn = document.querySelector('.code-sidebar .btn-outline');
+    btn.textContent = '…rendering';
+    btn.disabled = true;
+    try {
+      const card = document.getElementById('code-card');
+      const canvas = await html2canvas(card, {
+        scale: 3,
+        useCORS: true,
+        backgroundColor: null,
+        logging: false,
+        allowTaint: true
+      });
+      const slug = (document.getElementById('c-caption').value.trim() || 'code-card')
+        .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      const link = document.createElement('a');
+      link.download = slug + '.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      toast('✓ Code card downloaded at 3× resolution!');
+    } catch(e) {
+      toast('⚠ Export failed — check console.');
+      console.error(e);
+    } finally {
+      btn.textContent = '⬇ Download Card as Image';
+      btn.disabled = false;
+    }
+  }
+</script>
+</body>
+</html>

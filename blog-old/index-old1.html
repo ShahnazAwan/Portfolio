@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog | Shahnaz Kulsoom</title>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #0ea5e9; --primary-light: #e0f2fe; --primary-dark: #0369a1;
+      --accent: #06b6d4; --accent2: #818cf8;
+      --bg: #f8fafc; --bg2: #ffffff;
+      --text: #0f172a; --text2: #475569; --text3: #94a3b8;
+      --border: #e2e8f0;
+      --card-shadow: 0 4px 24px rgba(14,165,233,0.08),0 1px 4px rgba(0,0,0,0.04);
+      --card-shadow-hover: 0 12px 40px rgba(14,165,233,0.18),0 2px 8px rgba(0,0,0,0.08);
+      --nav-height: 68px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; overflow-x: hidden; }
+
+    /* NAVBAR */
+    .navbar { position: fixed; top:0; left:0; right:0; z-index:100; height:var(--nav-height); display:flex; align-items:center; padding:0 2.5rem; background:rgba(248,250,252,0.92); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); box-shadow:0 4px 24px rgba(14,165,233,0.06); }
+    .nav-inner { max-width:1100px; width:100%; margin:0 auto; display:flex; align-items:center; justify-content:space-between; }
+    .nav-brand { font-family:'Raleway',sans-serif; font-weight:800; font-size:1.2rem; color:var(--primary-dark); text-decoration:none; letter-spacing:-0.02em; }
+    .nav-links { display:flex; gap:2rem; list-style:none; }
+    .nav-links a { font-size:0.9rem; font-weight:500; color:var(--text2); text-decoration:none; position:relative; transition:color 0.2s; }
+    .nav-links a::after { content:''; position:absolute; bottom:-3px; left:0; width:0; height:2px; background:var(--primary); border-radius:2px; transition:width 0.3s; }
+    .nav-links a:hover { color:var(--primary); }
+    .nav-links a:hover::after { width:100%; }
+    .nav-links .nav-blog a { background:var(--primary); color:#fff; padding:6px 16px; border-radius:100px; font-size:0.85rem; transition:background 0.2s,transform 0.2s; }
+    .nav-links .nav-blog a::after { display:none; }
+    .nav-links .nav-blog a:hover { background:var(--primary-dark); transform:translateY(-1px); }
+
+    /* PROGRESS BAR */
+    #read-progress { position:fixed; top:var(--nav-height); left:0; height:3px; width:0%; background:linear-gradient(90deg,var(--primary),var(--accent2)); z-index:200; transition:width 0.1s linear; opacity:0; pointer-events:none; }
+
+    /* VIEWS */
+    #view-listing { display:block; }
+    #view-post    { display:none; }
+
+    /* HERO */
+    .blog-hero { padding:calc(var(--nav-height) + 4rem) 2.5rem 4rem; background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 40%,#f8fafc 100%); position:relative; overflow:hidden; }
+    .blog-hero::before,.post-hero::before { content:''; position:absolute; top:-100px; right:-100px; width:400px; height:400px; border-radius:50%; background:radial-gradient(circle,rgba(14,165,233,0.1) 0%,transparent 70%); animation:float 8s ease-in-out infinite; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-20px)} }
+    .blog-hero-inner,.post-hero-inner { max-width:1100px; margin:0 auto; position:relative; z-index:1; }
+    .post-hero-inner { max-width:720px; }
+    .section-label { font-size:0.78rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--primary); margin-bottom:0.75rem; }
+    .blog-hero h1 { font-family:'Raleway',sans-serif; font-size:clamp(2.2rem,4vw,3.5rem); font-weight:800; letter-spacing:-0.03em; margin-bottom:1rem; }
+    .blog-hero h1 span { color:var(--primary); }
+    .blog-hero > .blog-hero-inner > p { font-size:1.05rem; color:var(--text2); font-weight:300; max-width:540px; }
+    .post-count { display:inline-flex; align-items:center; gap:0.4rem; margin-top:1.25rem; font-size:0.82rem; color:var(--text3); }
+    .post-count strong { color:var(--primary); font-weight:600; }
+
+    /* GRID */
+    .blog-section { padding:4rem 2.5rem 6rem; }
+    .blog-inner { max-width:1100px; margin:0 auto; }
+    .blog-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:2rem; }
+
+    /* CARD */
+    .blog-card { background:var(--bg2); border:1px solid var(--border); border-radius:20px; overflow:hidden; box-shadow:var(--card-shadow); transition:transform 0.3s,box-shadow 0.3s; opacity:0; transform:translateY(24px); display:flex; flex-direction:column; cursor:pointer; }
+    .blog-card.visible { opacity:1; transform:translateY(0); transition:opacity 0.55s ease,transform 0.55s ease,box-shadow 0.3s; }
+    .blog-card:hover { transform:translateY(-8px); box-shadow:var(--card-shadow-hover); }
+    .blog-card-top { height:6px; background:linear-gradient(90deg,var(--primary),var(--accent2)); }
+    .blog-card-body { padding:1.75rem 2rem; flex:1; display:flex; flex-direction:column; }
+    .blog-meta { display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem; flex-wrap:wrap; }
+    .blog-category,.post-category { font-size:0.72rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--primary-dark); background:var(--primary-light); padding:3px 10px; border-radius:100px; border:1px solid rgba(14,165,233,0.2); }
+    .blog-date,.blog-read-time,.post-date,.post-read-time { font-size:0.8rem; color:var(--text3); }
+    .blog-card-title { font-family:'Raleway',sans-serif; font-size:1.15rem; font-weight:700; color:var(--text); margin-bottom:0.75rem; line-height:1.35; }
+    .blog-card-excerpt { font-size:0.9rem; color:var(--text2); font-weight:300; line-height:1.7; flex:1; margin-bottom:1.5rem; }
+    .blog-card-link { display:inline-flex; align-items:center; gap:6px; font-size:0.88rem; font-weight:600; color:var(--primary-dark); transition:gap 0.2s,color 0.2s; }
+    .blog-card:hover .blog-card-link { color:var(--primary); gap:10px; }
+
+    /* POST HERO */
+    .post-hero { padding:calc(var(--nav-height) + 4rem) 2.5rem 3.5rem; background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 40%,#f8fafc 100%); position:relative; overflow:hidden; }
+    .back-link { display:inline-flex; align-items:center; gap:6px; font-size:0.85rem; font-weight:500; color:var(--text3); text-decoration:none; margin-bottom:1.5rem; transition:color 0.2s,gap 0.2s; cursor:pointer; border:none; background:none; font-family:inherit; padding:0; }
+    .back-link:hover { color:var(--primary); gap:10px; }
+    .post-meta { display:flex; align-items:center; gap:0.75rem; margin-bottom:1.25rem; flex-wrap:wrap; }
+    .post-hero h1 { font-family:'Raleway',sans-serif; font-size:clamp(1.9rem,4vw,2.8rem); font-weight:800; letter-spacing:-0.03em; line-height:1.2; margin-bottom:1rem; }
+    .post-subtitle { font-size:1.1rem; color:var(--text2); font-weight:300; line-height:1.65; max-width:600px; }
+
+    /* POST BODY */
+    .post-body { padding:3.5rem 2.5rem 5rem; }
+    .post-content { max-width:720px; margin:0 auto; }
+    .post-content h2 { font-family:'Raleway',sans-serif; font-size:1.5rem; font-weight:700; color:var(--text); margin:2.5rem 0 1rem; letter-spacing:-0.02em; }
+    .post-content h3 { font-family:'Raleway',sans-serif; font-size:1.15rem; font-weight:600; color:var(--text); margin:2rem 0 0.75rem; }
+    .post-content p { font-size:1rem; color:var(--text2); font-weight:300; margin-bottom:1.4rem; line-height:1.8; }
+    .post-content strong { color:var(--text); font-weight:500; }
+    .post-content a { color:var(--primary-dark); text-decoration:underline; text-decoration-color:rgba(14,165,233,0.3); text-underline-offset:3px; transition:color 0.2s; }
+    .post-content a:hover { color:var(--primary); }
+    .post-content ul,.post-content ol { padding-left:1.5rem; margin-bottom:1.4rem; color:var(--text2); font-weight:300; }
+    .post-content li { margin-bottom:0.4rem; line-height:1.75; }
+    .post-content blockquote { border-left:3px solid var(--primary); background:var(--primary-light); padding:1rem 1.25rem; border-radius:0 10px 10px 0; margin:1.5rem 0; font-style:italic; color:var(--primary-dark); }
+    .post-content code { font-family:'Fira Code',monospace; font-size:0.88em; background:var(--primary-light); color:var(--primary-dark); padding:2px 6px; border-radius:5px; }
+    .post-content pre { background:#0f172a; border-radius:14px; padding:1.5rem; margin:1.5rem 0; overflow-x:auto; border:1px solid #1e293b; box-shadow:0 4px 24px rgba(0,0,0,0.12); }
+    .post-content pre code { background:transparent; color:#e2e8f0; font-size:0.88rem; padding:0; border-radius:0; line-height:1.7; }
+    .callout { display:flex; gap:0.75rem; padding:1rem 1.25rem; border-radius:12px; margin:1.5rem 0; font-size:0.93rem; }
+    .callout-info  { background:#eff6ff; border:1px solid #bfdbfe; color:#1e40af; }
+    .callout-warn  { background:#fffbeb; border:1px solid #fde68a; color:#92400e; }
+    .callout-tip   { background:#f0fdf4; border:1px solid #bbf7d0; color:#14532d; }
+    .callout-icon  { font-size:1.1rem; flex-shrink:0; }
+    .post-content hr { border:none; border-top:1px solid var(--border); margin:2.5rem 0; }
+    .post-footer { max-width:720px; margin:0 auto; padding:2rem 0 4rem; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; }
+    .post-footer-btn { display:inline-flex; align-items:center; gap:6px; font-size:0.9rem; font-weight:600; color:var(--primary-dark); text-decoration:none; cursor:pointer; background:none; border:none; font-family:inherit; padding:0; transition:color 0.2s; }
+    .post-footer-btn:hover { color:var(--primary); }
+
+    /* FOOTER */
+    footer { text-align:center; padding:2rem; background:var(--text); color:var(--text3); font-size:0.85rem; }
+    footer span { color:var(--primary); }
+
+    .fade-in { opacity:0; transform:translateY(20px); transition:opacity 0.6s ease,transform 0.6s ease; }
+    .fade-in.visible { opacity:1; transform:translateY(0); }
+
+    @media (max-width:768px) {
+      .nav-links { display:none; }
+      .blog-grid { grid-template-columns:1fr; }
+      .post-hero,.post-body { padding-left:1.25rem; padding-right:1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="read-progress"></div>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-brand">SK</a>
+    <ul class="nav-links">
+      <li><a href="../index.html#home">Home</a></li>
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#experience">Experience</a></li>
+      <li><a href="../index.html#projects">Projects</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+      <li class="nav-blog"><a href="../blog/">Blog</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- LISTING -->
+<div id="view-listing">
+  <div class="blog-hero">
+    <div class="blog-hero-inner fade-in">
+      <div class="section-label">Writing & Insights</div>
+      <h1>My <span>Blog</span></h1>
+      <p>Thoughts on .NET architecture, Azure, performance optimization, and lessons learned building enterprise software.</p>
+      <div class="post-count"><strong id="post-count-num">0</strong>&nbsp;posts published</div>
+    </div>
+  </div>
+  <section class="blog-section">
+    <div class="blog-inner">
+      <div class="blog-grid" id="blog-grid"></div>
+    </div>
+  </section>
+</div>
+
+<!-- POST VIEW -->
+<div id="view-post">
+  <div class="post-hero">
+    <div class="post-hero-inner">
+      <button class="back-link" onclick="showListing()">← All posts</button>
+      <div class="post-meta">
+        <span class="post-category" id="p-category"></span>
+        <span class="post-date" id="p-date"></span>
+        <span class="post-read-time" id="p-readtime"></span>
+      </div>
+      <h1 id="p-title"></h1>
+      <p class="post-subtitle" id="p-subtitle"></p>
+    </div>
+  </div>
+  <div class="post-body">
+    <div class="post-content" id="p-content"></div>
+    <div class="post-footer">
+      <button class="post-footer-btn" onclick="showListing()">← Back to all posts</button>
+      <a class="post-footer-btn" href="../index.html#contact">Got questions? Contact me →</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 <span>Shahnaz Kulsoom</span> · Senior Full Stack .NET Developer</p>
+</footer>
+
+<script>
+
+const POSTS = [
+  {
+    slug:     "why-i-switched-to-dotnet-8",
+    title:    "Why I Switched from .NET 6 to .NET 8 and Never Looked Back",
+    category: ".NET",
+    date:     "May 2026",
+    readTime: "5 min read",
+    excerpt:  "A practical walkthrough of the performance gains, new APIs, and developer experience improvements that made .NET 8 a game-changer for our enterprise projects.",
+    subtitle: "Real numbers, real projects — here's what actually changed when we migrated.",
+    body: `
+      <p>When .NET 8 dropped, I'll be honest — I wasn't rushing to migrate. We had stable .NET 6 services running in production, a team that knew the codebase, and no burning reason to rock the boat. Then I ran the benchmarks.</p>
+
+      <h2>The Performance Numbers</h2>
+      <p>Our most-hit API endpoint — a product search aggregating from three internal services — dropped from an average of <strong>142ms to 89ms</strong> response time. That's a 37% improvement without touching a single line of business logic.</p>
+      <p>The gains come from improvements across the runtime: better JIT compilation, faster GC, and Frozen Collections for read-only data.</p>
+
+      <pre><code class="language-csharp">// Frozen collections — perfect for lookup tables loaded at startup
+var statusMap = new Dictionary&lt;string, int&gt;
+{
+    ["active"]   = 1,
+    ["inactive"] = 0,
+    ["pending"]  = 2
+}.ToFrozenDictionary();</code></pre>
+
+      <h2>Primary Constructors</h2>
+      <p>Services with constructor injection went from boilerplate-heavy to clean:</p>
+
+      <pre><code class="language-csharp">// Before (.NET 6)
+public class OrderService
+{
+    private readonly IOrderRepository _repo;
+    private readonly ILogger&lt;OrderService&gt; _logger;
+
+    public OrderService(IOrderRepository repo, ILogger&lt;OrderService&gt; logger)
+    {
+        _repo   = repo;
+        _logger = logger;
+    }
+}
+
+// After (.NET 8) — same result, half the lines
+public class OrderService(IOrderRepository repo, ILogger&lt;OrderService&gt; logger)
+{
+    public async Task&lt;Order&gt; GetAsync(int id)
+    {
+        logger.LogInformation("Fetching order {Id}", id);
+        return await repo.GetByIdAsync(id);
+    }
+}</code></pre>
+
+      <h2>Native AOT for Lambdas</h2>
+      <p>For Azure Functions and lightweight microservices, Native AOT compilation cut cold start times dramatically — services that took 800ms now come up in under 120ms.</p>
+
+      <div class="callout callout-warn">
+        <span class="callout-icon">⚠️</span>
+        <span>AOT has trade-offs — reflection-heavy libraries need adaptation. Test thoroughly before enabling it on complex services.</span>
+      </div>
+
+      <h2>Should You Migrate?</h2>
+      <p>If you're on .NET 6 (LTS), support runs until May 2027. But the performance wins alone justify moving. Start with a single service, measure before and after, and let the numbers make the case to your team.</p>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">💡</span>
+        <span>Use the <code>dotnet-upgrade-assistant</code> CLI tool — it generates a migration checklist tailored to your project and catches breaking changes early.</span>
+      </div>
+
+      <hr>
+      <p>The migration took about two sprints per service. The performance and developer experience payoff has been well worth it on every project since.</p>
+    `
+  },
+  {
+    slug:     "redis-caching-strategies",
+    title:    "Redis Caching Strategies That Cut Our API Response Time by around 65%",
+    category: "Azure",
+    date:     "May 2026",
+    readTime: "7 min read",
+    excerpt:  "Real-world patterns for using Redis in .NET microservices — from cache-aside to pub/sub, with code examples from production systems.",
+    subtitle: "Practical patterns we use in production — not textbook theory.",
+    body: `
+      <p>Caching is one of those topics where the gap between theory and practice is huge. Every article explains cache-aside but a very few explain what happens when your cache goes stale across five services writing to the same data.</p>
+
+      <h2>Pattern 1: Cache-Aside with Stampede Protection</h2>
+      <p>Under high load, a cache can miss on a popular key triggers dozens of simultaneous database hits — the "thundering herd" problem. We solved it with a distributed lock:</p>
+
+      <pre><code class="language-csharp">public async Task&lt;Product&gt; GetProductAsync(int id)
+{
+    var cacheKey = $"product:{id}";
+    var cached   = await _cache.GetStringAsync(cacheKey);
+
+    if (cached is not null)
+        return JsonSerializer.Deserialize&lt;Product&gt;(cached)!;
+
+    await using var redisLock = await _lockFactory.CreateLockAsync(
+        $"lock:{cacheKey}", TimeSpan.FromSeconds(10));
+
+    if (!redisLock.IsAcquired)
+    {
+        await Task.Delay(50);
+        cached = await _cache.GetStringAsync(cacheKey);
+        return cached is not null
+            ? JsonSerializer.Deserialize&lt;Product&gt;(cached)!
+            : await _repo.GetByIdAsync(id);
+    }
+
+    var product = await _repo.GetByIdAsync(id);
+    await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(product),
+        new DistributedCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+        });
+
+    return product;
+}</code></pre>
+
+      <h2>Pattern 2: Write-Through for Critical Data</h2>
+      <p>For user sessions and shopping carts — anything where a stale read(outdated or old data) causes a visible bug — write to cache and database simultaneously:</p>
+
+      <pre><code class="language-csharp">public async Task UpdateCartAsync(CartUpdateDto dto)
+{
+    await Task.WhenAll(
+        _repo.UpdateCartAsync(dto),
+        _cache.SetStringAsync(
+            $"cart:{dto.UserId}",
+            JsonSerializer.Serialize(dto),
+            new DistributedCacheEntryOptions
+            {
+                SlidingExpiration = TimeSpan.FromMinutes(30)
+            })
+    );
+}</code></pre>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">ℹ️</span>
+        <span>Write-through increases write latency slightly. Use it only for data where read consistency really matters.</span>
+      </div>
+
+      <h2>Pattern 3: Pub/Sub Cache Invalidation</h2>
+      <p>When multiple service instances hold the same cached data, use Redis pub/sub to broadcast invalidations across all the nodes:</p>
+
+      <pre><code class="language-csharp">// Publisher — called when a product is updated
+await _subscriber.PublishAsync("cache:invalidate", $"product:{productId}");
+
+//Subscriber — registered at startup in each instance
+_subscriber.Subscribe("cache:invalidate", async (channel, key) =>
+{
+    await _cache.RemoveAsync(key);
+    _logger.LogInformation("Cache invalidated: {Key}", key);
+});</code></pre>
+
+      <h2>The Results</h2>
+      <p>By Combining these three patterns reduced average response time from around <strong>340ms to 138ms</strong> — around 65% improvement — and cut database load by roughly around 70% during peak traffic.</p>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">💡</span>
+        <span> Always instrument cache hit rates. Without visibility, you are flying blind when something breaks.</span>
+      </div>
+
+      <hr>
+      <p>Redis is deceptively simple to add and genuinely very hard to operate well. Start with cache-aside, measure your hit/miss rate, and only add complexity when the data justifies it.</p>
+    `
+  }
+
+ 
+];
+
+// ─── ENGINE ─────────────────────────────────────────────
+const listingEl  = document.getElementById('view-listing');
+const postEl     = document.getElementById('view-post');
+const progressEl = document.getElementById('read-progress');
+
+function showListing() {
+  listingEl.style.display  = 'block';
+  postEl.style.display     = 'none';
+  progressEl.style.opacity = '0';
+  document.title = 'Blog | Shahnaz Kulsoom';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showPost(slug) {
+  const post = POSTS.find(p => p.slug === slug);
+  if (!post) return;
+  document.getElementById('p-category').textContent = post.category;
+  document.getElementById('p-date').textContent     = post.date;
+  document.getElementById('p-readtime').textContent = '· ' + post.readTime;
+  document.getElementById('p-title').textContent    = post.title;
+  document.getElementById('p-subtitle').textContent = post.subtitle || post.excerpt;
+  document.getElementById('p-content').innerHTML    = post.body;
+  document.title = post.title + ' | Shahnaz Kulsoom';
+  listingEl.style.display  = 'none';
+  postEl.style.display     = 'block';
+  progressEl.style.opacity = '1';
+  window.scrollTo({ top: 0 });
+  if (window.hljs) document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+}
+
+function renderListing() {
+  document.getElementById('post-count-num').textContent = POSTS.length;
+  const grid = document.getElementById('blog-grid');
+  grid.innerHTML = POSTS.map(post => `
+    <article class="blog-card" onclick="showPost('${post.slug}')">
+      <div class="blog-card-top"></div>
+      <div class="blog-card-body">
+        <div class="blog-meta">
+          <span class="blog-category">${post.category}</span>
+          <span class="blog-date">${post.date}</span>
+          <span class="blog-read-time">· ${post.readTime}</span>
+        </div>
+        <h2 class="blog-card-title">${post.title}</h2>
+        <p class="blog-card-excerpt">${post.excerpt}</p>
+        <span class="blog-card-link">Read post →</span>
+      </div>
+    </article>
+  `).join('');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fade-in, .blog-card').forEach((el, i) => {
+    el.style.transitionDelay = `${(i % 3) * 0.08}s`;
+    observer.observe(el);
+  });
+}
+
+document.addEventListener('scroll', () => {
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  if (max > 0) progressEl.style.width = (window.scrollY / max * 100).toFixed(1) + '%';
+});
+
+renderListing();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</body>
+</html>
